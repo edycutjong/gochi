@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useAccount } from 'wagmi';
+import { Plug } from 'lucide-react';
 import PetViewport from '@/components/PetViewport';
 import StatBars from '@/components/StatBars';
 import ActionButtons from '@/components/ActionButtons';
@@ -89,7 +90,7 @@ export default function Home() {
   if (!isConnected) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-[var(--gochi-muted)] font-mono space-y-4 min-h-[50vh]">
-        <div className="text-4xl animate-pulse mb-4">🔌</div>
+        <Plug className="w-12 h-12 animate-pulse mb-4 text-[var(--gochi-cyan)] opacity-80" />
         <p>Please connect your wallet to interact with your Gochi.</p>
         <p className="text-xs opacity-50">Make sure you are on the 0G Mainnet (Chain ID: 16661).</p>
       </div>
@@ -101,7 +102,7 @@ export default function Home() {
   }
 
   return (
-    <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto h-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-6">
+    <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto h-full xl:h-[calc(100vh-5rem)] grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-6">
       
       {/* Left Column: Pet & Actions */}
       <div className="xl:col-span-4 flex flex-col gap-6">
@@ -111,12 +112,12 @@ export default function Home() {
       </div>
 
       {/* Center Column: Chat Panel */}
-      <div className="xl:col-span-5 h-[500px] md:h-[600px] xl:h-auto">
+      <div className="xl:col-span-5 h-[500px] md:h-[600px] xl:h-full">
         <ChatPanel state={stats} />
       </div>
 
       {/* Right Column: Memory Log & Latency */}
-      <div className="xl:col-span-3 flex flex-col gap-6 h-[500px] md:h-[600px] xl:h-auto">
+      <div className="xl:col-span-3 flex flex-col gap-6 h-[500px] md:h-[600px] xl:h-full">
         <div className="flex-1 min-h-0">
           <MemoryLog memories={memories} />
         </div>
