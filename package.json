@@ -11,7 +11,11 @@
     "typecheck": "tsc --noEmit",
     "test": "jest --passWithNoTests",
     "test:coverage": "jest --coverage --passWithNoTests",
-    "ci": "npm run lint && npm run typecheck && npm run test:coverage"
+    "ci": "npm run lint && npm run typecheck && npm run test:coverage",
+    "contract:compile": "hardhat compile",
+    "contract:node": "hardhat node",
+    "contract:deploy:local": "hardhat run scripts/deploy.ts --network localhost",
+    "contract:deploy:0g": "hardhat run scripts/deploy.ts --network 0g-mainnet"
   },
   "dependencies": {
     "@0gfoundation/0g-storage-ts-sdk": "^1.2.9",
