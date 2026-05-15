@@ -46,7 +46,7 @@ Reference your memories occasionally to show you remember past interactions.`;
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'qwen/qwen-2.5-7b-instruct',
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: message || 'Hello!' },
