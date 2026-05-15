@@ -26,7 +26,7 @@ const zeroG = {
 
 const config = getDefaultConfig({
   appName: 'Gochi',
-  projectId: 'YOUR_PROJECT_ID',
+  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || '00000000000000000000000000000000',
   chains: [zeroG],
   ssr: true,
 });

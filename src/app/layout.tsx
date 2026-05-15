@@ -20,15 +20,17 @@ const pressStart2p = Press_Start_2P({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://gochi.edycu.dev"),
   title: "Gochi | 0G AI Pet",
   description: "On-chain AI virtual pet on 0G Network",
   icons: {
-    icon: "/icon.png",
+    icon: "/icon.svg",
+    apple: "/apple-icon.png",
   },
   openGraph: {
     title: "Gochi | 0G AI Pet",
     description: "On-chain AI virtual pet on 0G Network",
-    url: "https://gochi.vercel.app",
+    url: "https://gochi.edycu.dev",
     siteName: "Gochi",
     images: [
       {
@@ -75,9 +77,9 @@ export default function RootLayout({
               </div>
             </div>
             <div>
-              <ConnectButton 
-                showBalance={false} 
-                chainStatus="icon" 
+              <ConnectButton
+                showBalance={false}
+                chainStatus="icon"
                 accountStatus={{
                   smallScreen: 'avatar',
                   largeScreen: 'full',
