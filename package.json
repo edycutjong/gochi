@@ -15,7 +15,9 @@
     "contract:compile": "hardhat compile",
     "contract:node": "hardhat node",
     "contract:deploy:local": "hardhat run scripts/deploy.ts --network localhost",
-    "contract:deploy:0g": "hardhat run scripts/deploy.ts --network 0g-mainnet"
+    "contract:deploy:0g": "hardhat run scripts/deploy.ts --network 0g-mainnet",
+    "contract:deploy:testnet": "node scripts/deploy.mjs testnet",
+    "contract:deploy:mainnet": "node scripts/deploy.mjs mainnet"
   },
   "dependencies": {
     "@0gfoundation/0g-storage-ts-sdk": "^1.2.9",
