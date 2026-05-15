@@ -9,7 +9,7 @@ describe('LatencyMonitor', () => {
     
     expect(screen.getByText('0G Network Latency')).toBeInTheDocument();
     
-    const doubleDashes = screen.getAllByText('--');
+    const doubleDashes = screen.getAllByText('—');
     expect(doubleDashes).toHaveLength(4); // One for each metric
   });
 
@@ -26,7 +26,7 @@ describe('LatencyMonitor', () => {
     expect(screen.getByText('850ms')).toBeInTheDocument();
     expect(screen.getByText('850ms')).toHaveClass('text-[var(--gochi-red)]'); // >= 800
 
-    expect(screen.getByText('--')).toBeInTheDocument(); // For ai
-    expect(screen.getByText('--')).toHaveClass('text-[var(--gochi-muted)]');
+    expect(screen.getByText('—')).toBeInTheDocument(); // For ai
+    expect(screen.getByText('—')).toHaveClass('text-[var(--gochi-muted)]');
   });
 });

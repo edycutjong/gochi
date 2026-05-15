@@ -7,9 +7,9 @@ describe('LandingPage', () => {
     render(<LandingPage />);
     
     expect(screen.getByText('GOCHI')).toBeInTheDocument();
-    expect(screen.getByText(/The first fully autonomous, on-chain virtual pet/i)).toBeInTheDocument();
+    expect(screen.getByText(/The first on-chain AI virtual pet that lives entirely on the 0G Network/i)).toBeInTheDocument();
     
-    const link = screen.getByRole('link', { name: /ENTER 0G NETWORK/i });
+    const link = screen.getByRole('link', { name: /HATCH YOUR GOCHI/i });
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute('href', '/play');
   });
@@ -17,8 +17,8 @@ describe('LandingPage', () => {
   it('renders feature cards', () => {
     render(<LandingPage />);
     
-    expect(screen.getByText('On-Chain Memory')).toBeInTheDocument();
+    expect(screen.getByText('Permanent Memory')).toBeInTheDocument();
     expect(screen.getByText('0G Compute AI')).toBeInTheDocument();
-    expect(screen.getByText('Autonomous')).toBeInTheDocument();
+    expect(screen.getByText('Real-Time State')).toBeInTheDocument();
   });
 });

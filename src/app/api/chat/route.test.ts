@@ -43,6 +43,7 @@ describe('POST /api/chat', () => {
       json: async () => ({
         choices: [{ message: { content: 'Hello there!' } }],
       }),
+      headers: { get: () => null },
     });
 
     const request = new Request('http://localhost', {
@@ -63,6 +64,7 @@ describe('POST /api/chat', () => {
     fetchSpy.mockResolvedValue({
       ok: false,
       status: 402,
+      headers: { get: () => null },
     });
 
     const request = new Request('http://localhost', {
@@ -85,6 +87,7 @@ describe('POST /api/chat', () => {
     fetchSpy.mockResolvedValue({
       ok: false,
       status: 500,
+      headers: { get: () => null },
     });
 
     const request = new Request('http://localhost', {
@@ -114,5 +117,80 @@ describe('POST /api/chat', () => {
 
     expect(response.status).toBe(500);
     expect(data.error).toBe('Failed to communicate with Compute Router');
+  });
+
+  it('should include memories in system prompt if provided', async () => {
+    process.env.ROUTER_API_KEY = 'test_key';
+    
+    // Check that fetch is called with the memories in the system prompt
+    fetchSpy.mockResolvedValue({
+      ok: true,
+      json: jest.fn().mockResolvedValue({ choices: [{ message: { content: 'I remember!' } }] }),
+      headers: { get: () => null },
+    });
+
+    const request = new Request('http://localhost', {
+      method: 'POST',
+      body: JSON.stringify({
+        message: 'Hello',
+        state: { hunger: 80, mood: 90, energy: 80 },
+        memories: [{ title: 'Ate food' }, { title: 'Played game' }],
+      }),
+    });
+
+    await POST(request);
+
+    // Get the body of the fetch call to verify system prompt
+    const fetchCallArg = fetchSpy.mock.calls[0][1];
+    const fetchBody = JSON.parse(fetchCallArg.body);
+    const systemPromptMessage = fetchBody.messages.find((m: { role: string; content: string }) => m.role === 'system');
+    
+    expect(systemPromptMessage.content).toContain('Recent memories: Ate food; Played game.');
+  });
+
+  it('should default to "Hello!" if message is empty', async () => {
+    process.env.ROUTER_API_KEY = 'test_key';
+    fetchSpy.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        choices: [{ message: { content: 'Hi!' } }],
+      }),
+      headers: { get: () => null },
+    });
+
+    const request = new Request('http://localhost', {
+      method: 'POST',
+      body: JSON.stringify({ message: '', state: { hunger: 80, mood: 90, energy: 80 } }),
+    });
+
+    await POST(request);
+
+    const fetchCallArg = fetchSpy.mock.calls[0][1];
+    const fetchBody = JSON.parse(fetchCallArg.body);
+    const userMessage = fetchBody.messages.find((m: { role: string; content: string }) => m.role === 'user');
+    
+    expect(userMessage.content).toBe('Hello!');
+  });
+
+  it('should fallback to "System error. *bzzzt*" if choices array is empty', async () => {
+    process.env.ROUTER_API_KEY = 'test_key';
+    fetchSpy.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        choices: [],
+      }),
+      headers: { get: () => null },
+    });
+
+    const request = new Request('http://localhost', {
+      method: 'POST',
+      body: JSON.stringify({ message: 'Hello', state: { hunger: 80, mood: 90, energy: 80 } }),
+    });
+
+    const response = await POST(request);
+    const data = await response.json();
+
+    expect(data.success).toBe(true);
+    expect(data.reply).toBe('System error. *bzzzt*');
   });
 });

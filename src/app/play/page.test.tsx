@@ -41,7 +41,7 @@ jest.mock('@/components/LatencyMonitor', () => ({
 }));
 jest.mock('@/components/MintFlow', () => ({
   __esModule: true,
-  default: ({ onMint }: any) => <button data-testid="mint-button" onClick={onMint}>Mint Now</button>
+  default: ({ onMint }: any) => <button data-testid="mint-button" onClick={() => onMint(1)}>Mint Now</button>
 }));
 
 describe('PlayPage', () => {
@@ -58,14 +58,14 @@ describe('PlayPage', () => {
   it('renders disconnected state', () => {
     (useAccount as jest.Mock).mockReturnValue({ isConnected: false });
     render(<PlayPage />);
-    expect(screen.getByText('Please connect your wallet to interact with your Gochi.')).toBeInTheDocument();
+    expect(screen.getByText('Connect your wallet to hatch your Gochi.')).toBeInTheDocument();
   });
 
   it('renders wrong network state', () => {
     (useAccount as jest.Mock).mockReturnValue({ isConnected: true });
     (useChainId as jest.Mock).mockReturnValue(1); // Not 16602
     render(<PlayPage />);
-    expect(screen.getByText('Wrong network detected.')).toBeInTheDocument();
+    expect(screen.getByText('Wrong network')).toBeInTheDocument();
   });
 
   it('renders mint flow if not minted', () => {
@@ -81,10 +81,14 @@ describe('PlayPage', () => {
     (useChainId as jest.Mock).mockReturnValue(16602);
     
     (global.fetch as jest.Mock).mockResolvedValueOnce({
+      ok: true,
       json: jest.fn().mockResolvedValue({
-        value: { hunger: 50, mood: 50, energy: 50 },
+        value: { hunger: 50, mood: 50, energy: 50, lastUpdate: Date.now() },
         latency: 100
       })
+    }).mockResolvedValueOnce({
+      ok: true,
+      json: jest.fn().mockResolvedValue({ memories: [{ id: '1', title: 'Initial memory' }] })
     });
 
     render(<PlayPage />);
@@ -95,10 +99,11 @@ describe('PlayPage', () => {
     });
 
     expect(screen.getByTestId('pet-viewport')).toBeInTheDocument();
-    expect(global.fetch).toHaveBeenCalledWith('/api/kv/read?key=gochi_state');
+    expect(global.fetch).toHaveBeenCalledWith('/api/kv/read?key=gochi_state_1');
     
     // Verify fetched state is passed down
-    expect(screen.getByTestId('stat-bars')).toHaveTextContent('{"hunger":50,"mood":50,"energy":50}');
+    expect(screen.getByTestId('stat-bars').textContent).toMatch(/{"hunger":50,"mood":50,"energy":50,"lastUpdate":\d+}/);
+    expect(screen.getByTestId('memory-log')).toHaveTextContent('1 memories');
   });
 
   it('handles actions correctly', async () => {
@@ -107,12 +112,19 @@ describe('PlayPage', () => {
     
     (global.fetch as jest.Mock)
       .mockResolvedValueOnce({
+        ok: true,
         json: jest.fn().mockResolvedValue({ value: null }) // read initially
       })
       .mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ memories: [] }) // read memories initially
+      })
+      .mockResolvedValueOnce({
+        ok: true,
         json: jest.fn().mockResolvedValue({ txHash: '0x123', latency: 200 }) // write kv
       })
       .mockResolvedValueOnce({
+        ok: true,
         json: jest.fn().mockResolvedValue({ success: true, merkleRoot: '0xabc', latency: 300 }) // archive log
       });
 
@@ -130,7 +142,7 @@ describe('PlayPage', () => {
     expect(screen.getByTestId('pet-viewport')).toHaveAttribute('data-action', 'feed');
     
     // Stats should update optimistically (hunger +20)
-    expect(screen.getByTestId('stat-bars')).toHaveTextContent('{"hunger":90,"mood":80,"energy":60}');
+    expect(screen.getByTestId('stat-bars')).toHaveTextContent(/"hunger":90,"mood":80,"energy":60,"lastUpdate":\d+/);
     
     // Check fetch calls
     expect(global.fetch).toHaveBeenCalledWith('/api/kv/write', expect.any(Object));
@@ -150,9 +162,15 @@ describe('PlayPage', () => {
     (useAccount as jest.Mock).mockReturnValue({ isConnected: true });
     (useChainId as jest.Mock).mockReturnValue(16602);
     
-    (global.fetch as jest.Mock).mockResolvedValueOnce({
-      json: jest.fn().mockResolvedValue({ value: null })
-    });
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ value: null })
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ memories: [] })
+      });
 
     render(<PlayPage />);
     
@@ -165,5 +183,79 @@ describe('PlayPage', () => {
     });
 
     expect(screen.getByTestId('latency-monitor')).toHaveTextContent('"ai":150');
+  });
+
+  it('handles play action and network errors', async () => {
+    (useAccount as jest.Mock).mockReturnValue({ isConnected: true });
+    (useChainId as jest.Mock).mockReturnValue(16602);
+    
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ value: null }) // read initially
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ memories: [] }) // read memories initially
+      })
+      .mockRejectedValueOnce(new Error('Network failure')); // write kv fails
+
+    const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    render(<PlayPage />);
+    
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('mint-button'));
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByText('Play'));
+    });
+
+    // Pet action should be set to 'play'
+    expect(screen.getByTestId('pet-viewport')).toHaveAttribute('data-action', 'play');
+    
+    // Check fetch calls error is caught
+    expect(consoleErrorMock).toHaveBeenCalledWith(expect.any(Error));
+
+    consoleErrorMock.mockRestore();
+  });
+
+  it('applies passive decay over time', async () => {
+    (useAccount as jest.Mock).mockReturnValue({ isConnected: true });
+    (useChainId as jest.Mock).mockReturnValue(16602);
+    
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({
+          value: { hunger: 50, mood: 50, energy: 50, lastUpdate: Date.now() - 60000 }, // 1 minute old
+        })
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ memories: [] })
+      });
+
+    render(<PlayPage />);
+    
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('mint-button'));
+    });
+
+    expect(screen.getByTestId('pet-viewport')).toBeInTheDocument();
+    
+    // Advance time to trigger the passive decay tick
+    act(() => {
+      jest.advanceTimersByTime(60000);
+    });
+
+    // We should see decayed stats in stat-bars
+    // At 1 minute elapsed from 60000ms ago: hunger drops by 1 (per minute rate), mood by 0.5, energy by 0.5
+    // Actually the mock returns lastUpdate Date.now() - 60000. So when it loads it decays for 1 minute.
+    // Then after advancing 60s, it decays another 1 minute. Total 2 minutes decay.
+    // DECAY_PER_MINUTE is { hunger: 0.1, mood: 0.05, energy: 0.03 }
+    // After 2 elapsed minutes: hunger -0.2 (49.8), mood -0.1 (49.9), energy -0.06 (49.94)
+    expect(screen.getByTestId('stat-bars')).toHaveTextContent(/\"hunger\":49\.8,\"mood\":49\.9.*,\"energy\":49\.94/);
   });
 });

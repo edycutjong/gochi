@@ -43,7 +43,7 @@ describe('ActionButtons', () => {
     });
   });
 
-  it('shows loading state text for the clicked button', async () => {
+  it('shows loading state text for all buttons', async () => {
     let resolveAction: (value: void) => void = () => {};
     const mockOnAction = jest.fn().mockReturnValue(
       new Promise<void>((resolve) => {
@@ -51,16 +51,26 @@ describe('ActionButtons', () => {
       })
     );
 
-    render(<ActionButtons onAction={mockOnAction} />);
+    const { container } = render(<ActionButtons onAction={mockOnAction} />);
     
-    const playButton = screen.getByRole('button', { name: /play/i });
-    fireEvent.click(playButton);
-
-    expect(screen.getByText('...')).toBeInTheDocument(); // Loading text
-
+    // Play
+    fireEvent.click(screen.getByRole('button', { name: /play/i }));
+    expect(container.querySelector('.lucide-loader-circle')).toBeInTheDocument();
     resolveAction();
-    await waitFor(() => {
-      expect(screen.queryByText('...')).not.toBeInTheDocument();
-    });
+    await waitFor(() => expect(container.querySelector('.lucide-loader-circle')).not.toBeInTheDocument());
+
+    // Feed
+    mockOnAction.mockReturnValue(new Promise<void>((resolve) => { resolveAction = resolve; }));
+    fireEvent.click(screen.getByRole('button', { name: /feed/i }));
+    expect(container.querySelector('.lucide-loader-circle')).toBeInTheDocument();
+    resolveAction();
+    await waitFor(() => expect(container.querySelector('.lucide-loader-circle')).not.toBeInTheDocument());
+
+    // Sleep
+    mockOnAction.mockReturnValue(new Promise<void>((resolve) => { resolveAction = resolve; }));
+    fireEvent.click(screen.getByRole('button', { name: /sleep/i }));
+    expect(container.querySelector('.lucide-loader-circle')).toBeInTheDocument();
+    resolveAction();
+    await waitFor(() => expect(container.querySelector('.lucide-loader-circle')).not.toBeInTheDocument());
   });
 });

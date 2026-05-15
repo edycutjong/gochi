@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import StatBars from './StatBars';
 
 describe('StatBars', () => {
@@ -27,15 +27,15 @@ describe('StatBars', () => {
     const lowStats = {
       hunger: 20, // < 30
       mood: 10,
-      energy: 10, // < 20
+      energy: 10, // < 20 (Critical)
     };
     const { container } = render(<StatBars stats={lowStats} />);
     
-    // Hunger bar chunks should have 'bg-gochi-red'
-    expect(container.querySelectorAll('.bg-gochi-red').length).toBeGreaterThan(0);
+    // Hunger bar chunks should have 'bg-[var(--gochi-red)]'
+    expect(container.querySelectorAll('[class*="bg-[var(--gochi-red)]"]').length).toBeGreaterThan(0);
     
-    // Energy bar chunks should have 'animate-pulse' and 'bg-gochi-amber'
-    expect(container.querySelectorAll('.bg-gochi-amber.animate-pulse').length).toBeGreaterThan(0);
+    // Energy bar chunks are critical, so they will be 'bg-[var(--gochi-red)]' and 'animate-pulse'
+    expect(container.querySelectorAll('[class*="bg-[var(--gochi-red)]"][class*="animate-pulse"]').length).toBeGreaterThan(0);
   });
 
   it('applies normal styling when stats are high', () => {
@@ -46,10 +46,36 @@ describe('StatBars', () => {
     };
     const { container } = render(<StatBars stats={highStats} />);
     
-    // Hunger bar chunks should have 'bg-gochi-green'
-    expect(container.querySelectorAll('.bg-gochi-green').length).toBeGreaterThan(0);
+    // Hunger bar chunks should have 'bg-[var(--gochi-green)]'
+    expect(container.querySelectorAll('[class*="bg-[var(--gochi-green)]"]').length).toBeGreaterThan(0);
     
-    // Energy bar chunks should have 'bg-gochi-pixel'
-    expect(container.querySelectorAll('.bg-gochi-pixel').length).toBeGreaterThan(0);
+    // Energy bar chunks should have 'bg-[var(--gochi-pixel)]'
+    expect(container.querySelectorAll('[class*="bg-[var(--gochi-pixel)]"]').length).toBeGreaterThan(0);
+  });
+
+  it('displays stat deltas when stats change', async () => {
+    jest.useFakeTimers();
+    const { rerender } = render(<StatBars stats={defaultStats} />);
+    
+    // Change stats to trigger delta
+    rerender(<StatBars stats={{ hunger: 80, mood: 70, energy: 50 }} />);
+    
+    act(() => {
+      jest.advanceTimersByTime(0);
+    });
+
+    // Should show +10 for hunger and -10 for mood/energy
+    expect(screen.getByText('+10')).toBeInTheDocument();
+    expect(screen.getAllByText('-10').length).toBe(2);
+    
+    // Wait for timeout to clear deltas
+    act(() => {
+      jest.advanceTimersByTime(1500);
+    });
+    
+    expect(screen.queryByText('+10')).not.toBeInTheDocument();
+    expect(screen.queryByText('-10')).not.toBeInTheDocument();
+    
+    jest.useRealTimers();
   });
 });

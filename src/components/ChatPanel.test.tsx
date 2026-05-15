@@ -19,7 +19,7 @@ describe('ChatPanel', () => {
 
   it('renders initial message', () => {
     render(<ChatPanel state={mockState} />);
-    expect(screen.getByText("Beep boop! I'm online.")).toBeInTheDocument();
+    expect(screen.getByText("I'm alive... and I remember everything. What do you want to do today?")).toBeInTheDocument();
   });
 
   it('allows user to send a message and displays response', async () => {
@@ -79,5 +79,30 @@ describe('ChatPanel', () => {
       // Input should be cleared and typing state reset
       expect(input).toHaveValue('');
     });
+  });
+
+  it('prevents sending a message while already typing', () => {
+    fetchSpy.mockReturnValue(new Promise(() => {
+      // Promise that never resolves to simulate pending
+    }));
+
+    const { container } = render(<ChatPanel state={mockState} />);
+
+    const input = screen.getByPlaceholderText('Talk to your Gochi...');
+    const sendButton = screen.getByRole('button', { name: /send/i });
+
+    // Send first message
+    fireEvent.change(input, { target: { value: 'Hello' } });
+    fireEvent.click(sendButton);
+
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
+
+    // Try to send second message while first is pending
+    // Bypass disabled button state by submitting the form directly
+    const form = container.querySelector('form');
+    fireEvent.change(input, { target: { value: 'Second message' } });
+    fireEvent.submit(form!);
+
+    expect(fetchSpy).toHaveBeenCalledTimes(1); // Should still be 1
   });
 });
