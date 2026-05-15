@@ -51,7 +51,7 @@ export const metadata: Metadata = {
   },
 };
 
-import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { WalletConnect } from "@/components/WalletConnect";
 
 export default function RootLayout({
   children,
@@ -76,15 +76,8 @@ export default function RootLayout({
                 0G MAINNET
               </div>
             </div>
-            <div>
-              <ConnectButton
-                showBalance={false}
-                chainStatus="icon"
-                accountStatus={{
-                  smallScreen: 'avatar',
-                  largeScreen: 'full',
-                }}
-              />
+            <div className="flex items-center gap-4">
+              <WalletConnect />
             </div>
           </header>
           <main className="flex-1 overflow-auto">

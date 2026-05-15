@@ -1,14 +1,9 @@
 'use client';
 
 import * as React from 'react';
-import {
-  RainbowKitProvider,
-  getDefaultConfig,
-  darkTheme,
-} from '@rainbow-me/rainbowkit';
-import { WagmiProvider } from 'wagmi';
+import { WagmiProvider, createConfig, http } from 'wagmi';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
-import '@rainbow-me/rainbowkit/styles.css';
+import { injected, metaMask } from 'wagmi/connectors';
 
 // 0G Mainnet custom chain definition
 const zeroG = {
@@ -24,26 +19,25 @@ const zeroG = {
   },
 } as const;
 
-const config = getDefaultConfig({
-  appName: 'Gochi',
-  projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID || '00000000000000000000000000000000',
+const config = createConfig({
   chains: [zeroG],
+  connectors: [
+    metaMask(),
+    injected(),
+  ],
+  transports: {
+    [zeroG.id]: http(),
+  },
   ssr: true,
 });
 
-const queryClient = new QueryClient();
-
 export function Providers({ children }: { children: React.ReactNode }) {
+  const [queryClient] = React.useState(() => new QueryClient());
+
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider theme={darkTheme({
-          accentColor: '#06b6d4',
-          accentColorForeground: 'white',
-          borderRadius: 'none',
-        })}>
-          {children}
-        </RainbowKitProvider>
+        {children}
       </QueryClientProvider>
     </WagmiProvider>
   );
