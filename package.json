@@ -48,6 +48,13 @@
     "typescript": "^5"
   },
   "overrides": {
-    "wagmi": "$wagmi"
+    "wagmi": "$wagmi",
+    "axios": "^1.7.9",
+    "cookie": "^0.7.2",
+    "elliptic": "^6.6.1",
+    "postcss": "^8.5.3",
+    "serialize-javascript": "^7.0.5",
+    "tmp": "^0.2.4",
+    "undici": "^6.23.1"
   }
 }
