@@ -1,10 +1,13 @@
 'use client';
 
 import * as React from 'react';
-import { useAccount, useConnect, useDisconnect } from 'wagmi';
+import { useAccount, useConnect, useDisconnect, useChainId } from 'wagmi';
+
+const REQUIRED_CHAIN_ID = 16602;
 
 export function WalletConnect() {
   const { address, isConnected } = useAccount();
+  const chainId = useChainId();
   const { connect, connectors, error } = useConnect();
   const { disconnect } = useDisconnect();
 
@@ -16,21 +19,28 @@ export function WalletConnect() {
 
   if (!mounted) {
     return (
-      <button className="bg-[var(--gochi-panel)] text-[var(--gochi-text)] border border-[var(--gochi-border)] px-4 py-2 rounded-none font-mono text-xs opacity-50 cursor-not-allowed">
+      <button className="bg-[var(--gochi-panel)] text-[var(--gochi-text)] border border-[var(--gochi-border)] px-4 py-2 rounded font-mono text-xs opacity-50 cursor-not-allowed">
         Loading...
       </button>
     );
   }
 
   if (isConnected && address) {
+    const onCorrectChain = chainId === REQUIRED_CHAIN_ID;
     return (
       <div className="flex items-center gap-2">
-        <span className="hidden sm:inline-block font-mono text-[10px] text-[var(--gochi-text)] opacity-70">
-          {address.slice(0, 6)}...{address.slice(-4)}
-        </span>
+        <div className="hidden sm:flex items-center gap-1.5">
+          <div className={`w-1.5 h-1.5 rounded-full ${onCorrectChain ? 'bg-[var(--gochi-green)]' : 'bg-[var(--gochi-amber)] animate-pulse'}`} />
+          <span className="font-mono text-[10px] text-[var(--gochi-muted)]">
+            {onCorrectChain ? '0G Galileo' : 'Wrong network'}
+          </span>
+          <span className="font-mono text-[10px] text-[var(--gochi-text)] opacity-60 ml-1">
+            {address.slice(0, 6)}…{address.slice(-4)}
+          </span>
+        </div>
         <button
           onClick={() => disconnect()}
-          className="bg-[var(--gochi-panel)] hover:bg-red-500/10 text-red-400 border border-[var(--gochi-border)] hover:border-red-500/30 transition-colors px-4 py-2 rounded-none font-mono text-xs shadow-[0_0_10px_rgba(239,68,68,0.1)]"
+          className="bg-[var(--gochi-panel)] hover:bg-red-500/10 text-red-400 border border-[var(--gochi-border)] hover:border-red-500/30 transition-colors px-4 py-2 rounded font-mono text-xs"
         >
           Disconnect
         </button>
@@ -38,14 +48,17 @@ export function WalletConnect() {
     );
   }
 
-  const connector = connectors.find((c) => c.id === 'metaMask') || connectors.find((c) => c.id === 'injected') || connectors[0];
+  const connector =
+    connectors.find((c) => c.id === 'metaMask') ||
+    connectors.find((c) => c.id === 'injected') ||
+    connectors[0];
 
   return (
     <div className="flex items-center gap-2">
       {connector && (
         <button
           onClick={() => connect({ connector })}
-          className="bg-[var(--gochi-cyan)]/10 hover:bg-[var(--gochi-cyan)]/20 text-[var(--gochi-cyan)] border border-[var(--gochi-cyan)]/30 transition-colors px-4 py-2 rounded-none font-mono text-xs shadow-[0_0_10px_rgba(6,182,212,0.15)]"
+          className="bg-[var(--gochi-cyan)]/10 hover:bg-[var(--gochi-cyan)]/20 text-[var(--gochi-cyan)] border border-[var(--gochi-cyan)]/30 hover:border-[var(--gochi-cyan)]/60 transition-all px-4 py-2 rounded font-mono text-xs shadow-[0_0_10px_rgba(6,182,212,0.1)] hover:shadow-[0_0_15px_rgba(6,182,212,0.2)]"
         >
           Connect Wallet
         </button>

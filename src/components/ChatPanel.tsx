@@ -15,7 +15,7 @@ export default function ChatPanel({
   onLatency?: (ms: number) => void;
 }) {
   const [messages, setMessages] = useState<Message[]>([
-    { id: '1', sender: 'gochi', text: "Beep boop! I'm online." },
+    { id: '1', sender: 'gochi', text: "I'm alive... and I remember everything. What do you want to do today?" },
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -78,10 +78,13 @@ export default function ChatPanel({
               {msg.sender === 'gochi' && <Bot className="w-4 h-4 mt-0.5 opacity-70 shrink-0" />}
               <span className="flex-1">{msg.text}</span>
               {msg.teeVerified && (
-                <ShieldCheck
-                  className="w-3 h-3 text-[var(--gochi-green)] shrink-0 mt-0.5"
-                  title="TEE Verified by 0G Compute"
-                />
+                <span
+                  title="Response cryptographically verified by 0G Compute TEE"
+                  className="inline-flex items-center gap-1 text-[9px] font-mono text-[var(--gochi-green)] bg-[var(--gochi-green)]/10 border border-[var(--gochi-green)]/30 px-1.5 py-0.5 rounded shrink-0 self-end"
+                >
+                  <ShieldCheck className="w-3 h-3" />
+                  TEE
+                </span>
               )}
             </div>
           </div>
@@ -98,14 +101,19 @@ export default function ChatPanel({
         )}
       </div>
 
-      <form onSubmit={handleSend} className="p-3 bg-[var(--gochi-bg)] border-t border-[var(--gochi-border)] flex gap-2">
-        <span className="text-[var(--gochi-cyan)] pt-2">&gt;</span>
+      <form onSubmit={handleSend} className="p-3 bg-[var(--gochi-bg)] border-t border-[var(--gochi-border)] flex gap-2 items-center">
+        <span className="text-[var(--gochi-cyan)] flex items-center gap-0.5 shrink-0">
+          &gt;
+          {!isTyping && !input && (
+            <span className="animate-blink text-[var(--gochi-cyan)]">_</span>
+          )}
+        </span>
         <input
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder="Talk to your Gochi..."
-          className="flex-1 bg-transparent border-none outline-none text-sm text-[var(--gochi-text)] placeholder:text-[var(--gochi-muted)]"
+          placeholder={isTyping ? '' : 'Talk to your Gochi...'}
+          className="flex-1 bg-transparent border-none outline-none text-sm text-[var(--gochi-text)] placeholder:text-[var(--gochi-muted)] caret-[var(--gochi-cyan)]"
           disabled={isTyping}
         />
         <button

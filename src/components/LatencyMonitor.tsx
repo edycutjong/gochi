@@ -8,34 +8,66 @@ type Latencies = {
 };
 
 export default function LatencyMonitor({ latencies }: { latencies: Latencies }) {
-  const getColor = (val: number | null, thresholdGood: number, thresholdWarn: number) => {
-    if (val === null) return 'text-[var(--gochi-muted)]';
-    if (val < thresholdGood) return 'text-[var(--gochi-green)]';
-    if (val < thresholdWarn) return 'text-[var(--gochi-amber)]';
-    return 'text-[var(--gochi-red)]';
+  const getColor = (val: number | null, tGood: number, tWarn: number) => {
+    if (val === null) return { text: 'text-[var(--gochi-muted)]', bar: '' };
+    if (val < tGood) return { text: 'text-[var(--gochi-green)]', bar: 'bg-[var(--gochi-green)]' };
+    if (val < tWarn) return { text: 'text-[var(--gochi-amber)]', bar: 'bg-[var(--gochi-amber)]' };
+    return { text: 'text-[var(--gochi-red)]', bar: 'bg-[var(--gochi-red)]' };
   };
 
-  const renderMetric = (label: string, value: number | null, tGood: number, tWarn: number) => (
-    <div className="flex justify-between items-center text-xs font-mono">
-      <span className="text-[var(--gochi-muted)]">{label}:</span>
-      <span className={`${getColor(value, tGood, tWarn)} font-bold`}>
-        {value === null ? '--' : `${value}ms`}
-      </span>
-    </div>
-  );
+  const renderMetric = (
+    label: string,
+    value: number | null,
+    tGood: number,
+    tWarn: number,
+    tMax: number,
+  ) => {
+    const { text, bar } = getColor(value, tGood, tWarn);
+    const barPct = value === null ? 0 : Math.min(100, (value / tMax) * 100);
+
+    return (
+      <div className="space-y-1">
+        <div className="flex justify-between items-center text-xs font-mono">
+          <span className="text-[var(--gochi-muted)]">{label}</span>
+          <span className={`${text} font-bold tabular-nums`}>
+            {value === null ? '—' : `${value}ms`}
+          </span>
+        </div>
+        <div className="h-1.5 bg-[var(--gochi-bg)] rounded-full overflow-hidden">
+          <div
+            className={`h-full rounded-full transition-all duration-700 ease-out ${bar}`}
+            style={{ width: `${barPct}%` }}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  const hasAnyData = Object.values(latencies).some((v) => v !== null);
 
   return (
-    <div className="bg-[var(--gochi-panel)] border border-[var(--gochi-border)] rounded-xl p-4 shadow-lg w-full max-w-sm mx-auto md:mx-0 xl:mt-auto">
-      <div className="flex items-center gap-2 mb-3 pb-2 border-b border-[var(--gochi-border)]">
-        <div className="w-2 h-2 rounded-full bg-[var(--gochi-green)] animate-pulse"></div>
-        <h4 className="font-display text-[10px] text-[var(--gochi-text)]">0G Network Latency</h4>
+    <div className="bg-[var(--gochi-panel)] border border-[var(--gochi-border)] rounded-xl p-4 shadow-lg w-full">
+      <div className="flex items-center justify-between mb-4 pb-2 border-b border-[var(--gochi-border)]">
+        <div className="flex items-center gap-2">
+          <div className={`w-2 h-2 rounded-full ${hasAnyData ? 'bg-[var(--gochi-green)] animate-pulse' : 'bg-[var(--gochi-muted)]'}`} />
+          <h4 className="font-display text-[10px] text-[var(--gochi-text)]">0G Network Latency</h4>
+        </div>
+        {hasAnyData && (
+          <span className="font-mono text-[9px] text-[var(--gochi-green)] opacity-70">LIVE</span>
+        )}
       </div>
-      
-      <div className="space-y-2">
-        {renderMetric('KV Read', latencies.kvRead, 20, 50)}
-        {renderMetric('KV Write', latencies.kvWrite, 20, 50)}
-        {renderMetric('Log Upload', latencies.log, 300, 800)}
-        {renderMetric('Compute AI', latencies.ai, 1000, 2000)}
+
+      <div className="space-y-3">
+        {renderMetric('KV Read',    latencies.kvRead,  20,   50,   200)}
+        {renderMetric('KV Write',   latencies.kvWrite, 20,   50,   200)}
+        {renderMetric('Log Upload', latencies.log,     300,  800,  3000)}
+        {renderMetric('Compute AI', latencies.ai,      1000, 2000, 5000)}
+      </div>
+
+      <div className="mt-3 pt-2 border-t border-[var(--gochi-border)] flex justify-between font-mono text-[9px] text-[var(--gochi-muted)]">
+        <span className="text-[var(--gochi-green)]">■ fast</span>
+        <span className="text-[var(--gochi-amber)]">■ ok</span>
+        <span className="text-[var(--gochi-red)]">■ slow</span>
       </div>
     </div>
   );

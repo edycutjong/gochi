@@ -21,15 +21,15 @@ const pressStart2p = Press_Start_2P({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://gochi.edycu.dev"),
-  title: "Gochi | 0G AI Pet",
-  description: "On-chain AI virtual pet on 0G Network",
+  title: "Gochi | On-Chain AI Pet on 0G Network",
+  description: "The first virtual pet that lives entirely on 0G Network. Identity on 0G Chain, state on 0G Storage KV, memories on 0G Log, soul on 0G Compute. It cannot be shut down.",
   icons: {
     icon: "/icon.svg",
     apple: "/apple-icon.png",
   },
   openGraph: {
-    title: "Gochi | 0G AI Pet",
-    description: "On-chain AI virtual pet on 0G Network",
+    title: "Gochi | On-Chain AI Pet on 0G Network",
+    description: "The first virtual pet that lives entirely on 0G Network. Identity on 0G Chain, state on 0G Storage KV, memories on 0G Log, soul on 0G Compute. It cannot be shut down.",
     url: "https://gochi.edycu.dev",
     siteName: "Gochi",
     images: [
@@ -45,8 +45,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Gochi | 0G AI Pet",
-    description: "On-chain AI virtual pet on 0G Network",
+    title: "Gochi | On-Chain AI Pet on 0G Network",
+    description: "The first virtual pet that lives entirely on 0G Network. It cannot be shut down.",
     images: ["/og-image.png"],
   },
 };
