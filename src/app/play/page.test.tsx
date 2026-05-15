@@ -41,7 +41,12 @@ jest.mock('@/components/LatencyMonitor', () => ({
 }));
 jest.mock('@/components/MintFlow', () => ({
   __esModule: true,
-  default: ({ onMint }: any) => <button data-testid="mint-button" onClick={() => onMint(1)}>Mint Now</button>
+  default: ({ onMint }: any) => (
+    <div>
+      <button data-testid="mint-button" onClick={() => onMint(1)}>Mint Now</button>
+      <button data-testid="mint-button-undefined" onClick={() => onMint(undefined)}>Mint Now Undefined</button>
+    </div>
+  )
 }));
 
 describe('PlayPage', () => {
@@ -185,6 +190,56 @@ describe('PlayPage', () => {
     expect(screen.getByTestId('latency-monitor')).toHaveTextContent('"ai":150');
   });
 
+  it('handles sleep action', async () => {
+    (useAccount as jest.Mock).mockReturnValue({ isConnected: true });
+    (useChainId as jest.Mock).mockReturnValue(16602);
+    
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ value: null })
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ memories: [] })
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ txHash: '0x123', latency: 200 })
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ success: true, merkleRoot: '0xabc', latency: 300 })
+      });
+
+    render(<PlayPage />);
+    
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('mint-button'));
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByText('Sleep'));
+    });
+    expect(screen.getByTestId('pet-viewport')).toHaveAttribute('data-action', 'sleep');
+
+    // Also trigger Play to cover the "play" branch of the ternary without network errors
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ txHash: '0x456', latency: 200 })
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ success: true, merkleRoot: '0xdef', latency: 300 })
+      });
+
+    await act(async () => {
+      fireEvent.click(screen.getByText('Play'));
+    });
+    expect(screen.getByTestId('pet-viewport')).toHaveAttribute('data-action', 'play');
+  });
+
   it('handles play action and network errors', async () => {
     (useAccount as jest.Mock).mockReturnValue({ isConnected: true });
     (useChainId as jest.Mock).mockReturnValue(16602);
@@ -257,5 +312,96 @@ describe('PlayPage', () => {
     // DECAY_PER_MINUTE is { hunger: 0.1, mood: 0.05, energy: 0.03 }
     // After 2 elapsed minutes: hunger -0.2 (49.8), mood -0.1 (49.9), energy -0.06 (49.94)
     expect(screen.getByTestId('stat-bars')).toHaveTextContent(/\"hunger\":49\.8,\"mood\":49\.9.*,\"energy\":49\.94/);
+  });
+
+  it('handles missing lastUpdate in stats gracefully', async () => {
+    (useAccount as jest.Mock).mockReturnValue({ isConnected: true });
+    (useChainId as jest.Mock).mockReturnValue(16602);
+    
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({
+          value: { hunger: 50, mood: 50, energy: 50 }, // no lastUpdate
+        })
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ memories: [] })
+      });
+
+    render(<PlayPage />);
+    
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('mint-button'));
+    });
+
+    expect(screen.getByTestId('pet-viewport')).toBeInTheDocument();
+  });
+
+  it('handles fetch errors during initial load', async () => {
+    (useAccount as jest.Mock).mockReturnValue({ isConnected: true });
+    (useChainId as jest.Mock).mockReturnValue(16602);
+    
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 500
+      })
+      .mockResolvedValueOnce({
+        ok: false,
+        status: 500
+      });
+
+    const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+    render(<PlayPage />);
+    
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('mint-button'));
+    });
+
+    expect(consoleErrorMock).toHaveBeenCalled();
+    consoleErrorMock.mockRestore();
+  });
+
+  it('handles sleep action and undefined tokenId', async () => {
+    (useAccount as jest.Mock).mockReturnValue({ isConnected: true });
+    (useChainId as jest.Mock).mockReturnValue(16602);
+    
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ value: null })
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ memories: [] })
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ txHash: '0x123', latency: 200 }) // write kv
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ success: true, merkleRoot: '0xabc', latency: 300 }) // archive log
+      });
+
+    render(<PlayPage />);
+    
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('mint-button-undefined'));
+    });
+
+    await act(async () => {
+      fireEvent.click(screen.getByText('Sleep'));
+    });
+
+    expect(screen.getByTestId('pet-viewport')).toHaveAttribute('data-action', 'sleep');
+    
+    // Check state key was 'gochi_state' instead of 'gochi_state_1'
+    expect(global.fetch).toHaveBeenCalledWith('/api/kv/write', expect.objectContaining({
+      body: expect.stringContaining('"key":"gochi_state"')
+    }));
   });
 });

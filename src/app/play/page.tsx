@@ -27,7 +27,7 @@ const REQUIRED_CHAIN_ID = 16602;
 const DECAY_PER_MINUTE = { hunger: 0.1, mood: 0.05, energy: 0.03 };
 
 function applyDecay(stats: Stats): Stats {
-  const elapsedMinutes = (Date.now() - (stats.lastUpdate || Date.now())) / 60000;
+  const elapsedMinutes = (Date.now() - stats.lastUpdate) / 60000;
   if (elapsedMinutes < 0.5) return stats;
   return {
     hunger: Math.max(0, stats.hunger - DECAY_PER_MINUTE.hunger * elapsedMinutes),
