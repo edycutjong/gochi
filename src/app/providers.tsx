@@ -5,17 +5,17 @@ import { WagmiProvider, createConfig, http } from 'wagmi';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { injected, metaMask } from 'wagmi/connectors';
 
-// 0G Mainnet custom chain definition
+// 0G Galileo Testnet custom chain definition
 const zeroG = {
-  id: 16661,
-  name: '0G Mainnet',
+  id: 16602,
+  name: '0G Galileo Testnet',
   iconUrl: 'https://0g.ai/favicon.ico',
   nativeCurrency: { name: 'A0GI', symbol: 'A0GI', decimals: 18 },
   rpcUrls: {
-    default: { http: ['https://evmrpc.0g.ai'] },
+    default: { http: ['https://evmrpc-testnet.0g.ai'] },
   },
   blockExplorers: {
-    default: { name: 'ChainScan', url: 'https://chainscan.0g.ai' },
+    default: { name: 'ChainScan', url: 'https://chainscan-galileo.0g.ai' },
   },
 } as const;
 

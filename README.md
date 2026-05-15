@@ -60,7 +60,18 @@ Fully decentralized, stateful AI agents require complex orchestration and expens
 ### Installation
 1. Clone: `git clone https://github.com/edycutjong/gochi.git`
 2. Install: `npm install`
-3. Configure: `cp .env.example .env.local` and add your 0G Router API keys.
+3. Configure: `cp .env.example .env.local`
+
+#### 0G Galileo Testnet Setup (Required)
+To interact with Gochi and the 0G Compute Router, you must use the Testnet:
+1. **Add Network to MetaMask:**
+   - **Network Name:** `0G Galileo Testnet`
+   - **RPC URL:** `https://evmrpc-testnet.0g.ai`
+   - **Chain ID:** `16602`
+   - **Currency Symbol:** `A0GI`
+2. **Fund Wallet:** Get free testnet tokens from the [0G Faucet](https://faucet.0g.ai).
+3. **Get API Key:** Visit the [0G Compute Dashboard (Testnet)](https://pc.0g.ai/dashboard), deposit your testnet tokens, generate an API key, and add it to `.env.local` as `ROUTER_API_KEY`.
+
 4. Run: `npm run dev`
 
 > **For Judges:** You can interact with the pet and use the terminal interface instantly via our Live Demo link above. Wallet connection is simulated smoothly for review purposes.
