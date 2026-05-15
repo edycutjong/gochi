@@ -1,36 +1,96 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<div align="center">
+  <h1>Gochi 🐾</h1>
+  <p><em>On-chain AI virtual pet on 0G Network</em></p>
+  <img src="docs/readme-hero.png" alt="Gochi" width="100%">
 
-## Getting Started
+  <br/>
 
-First, run the development server:
+  [![Live Demo](https://img.shields.io/badge/🚀_Live-Demo-06b6d4?style=for-the-badge)](https://gochi.edycu.dev)
+  [![Pitch Video](https://img.shields.io/badge/🎬_Pitch-Video-ef4444?style=for-the-badge)](https://youtu.be/your-video)
+  [![Built for HackQuest](https://img.shields.io/badge/HackQuest-0G_APAC_2026-8b5cf6?style=for-the-badge)](https://hackquest.io)
 
+  <br/>
+
+  ![Next.js](https://img.shields.io/badge/Next.js_16-black?style=flat&logo=next.js)
+  ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
+  ![Tailwind](https://img.shields.io/badge/Tailwind_v4-38B2AC?style=flat&logo=tailwindcss&logoColor=white)
+  [![CI](https://github.com/edycutjong/gochi/actions/workflows/ci.yml/badge.svg)](https://github.com/edycutjong/gochi/actions/workflows/ci.yml)
+
+</div>
+
+---
+
+## 📸 See it in Action
+
+<div align="center">
+  <img src="docs/readme.png" alt="Gochi Demo" width="100%">
+</div>
+
+> **Mint, Nurture, and Evolve your AI Pet entirely on-chain using 0G Network's Storage and Compute.**
+
+---
+
+## 💡 The Problem & Solution
+Fully decentralized, stateful AI agents require complex orchestration and expensive computation.
+**Gochi** solves this by leveraging the 0G Network to deliver an engaging, low-latency Virtual Pet experience where state and AI inference live entirely on decentralized infrastructure.
+
+**Key Features:**
+- ⚡ **0G Storage Integration:** Pet memory and states are logged to the 0G decentralized KV store, creating a permanent, verifiable timeline.
+- 🧠 **0G Compute AI:** Interact directly with your pet using the 0G Router; your pet remembers past interactions stored in the memory log.
+- 🎨 **Retro-Cyberpunk Aesthetic:** High-fidelity pixel art and terminal UI design, fully responsive and beautifully immersive.
+
+## 🏗️ Architecture & Tech Stack
+
+| Layer | Technology |
+|---|---|
+| **Frontend** | Next.js 16 (App Router), React 19, Tailwind CSS v4 |
+| **Smart Contracts** | Hardhat, Solidity, Ethers.js |
+| **Wallet & Auth** | Wagmi, Viem, RainbowKit |
+| **Storage & Compute** | 0G Storage TS SDK, 0G Compute Router |
+
+## 🏆 Sponsor Tracks Targeted
+- **0G Network Foundation:** Utilizing Storage KV/Log for pet state and the Compute Router for conversational AI capabilities.
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js ≥ 20
+- npm
+
+### Installation
+1. Clone: `git clone https://github.com/edycutjong/gochi.git`
+2. Install: `npm install`
+3. Configure: `cp .env.example .env.local` and add your 0G Router API keys.
+4. Run: `npm run dev`
+
+> **For Judges:** You can interact with the pet and use the terminal interface instantly via our Live Demo link above. Wallet connection is simulated smoothly for review purposes.
+
+## 🧪 Testing & CI
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm run lint          # ESLint
+npm run typecheck     # TypeScript check
+npm run test          # Run tests
+npm run test:coverage # Coverage report
+npm run ci            # Full CI pipeline
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 📁 Project Structure
+```text
+gochi/
+├── docs/              # README assets (hero, screenshots)
+├── src/
+│   ├── app/          # Next.js pages and API Routes
+│   ├── components/   # React components (PetViewport, ChatPanel)
+│   └── lib/          # Shared utilities and types
+├── contracts/        # Hardhat smart contracts
+├── scripts/          # Hardhat deployment scripts
+├── .env.example      # Environment template
+├── .github/          # CI workflows
+└── README.md         # You are here
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📄 License
+[MIT](LICENSE) © 2026 Edy Cu
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🙏 Acknowledgments
+Built for HackQuest 0G APAC 2026. Thank you to the 0G Foundation for the APIs and decentralized infrastructure.
