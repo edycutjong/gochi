@@ -1,10 +1,12 @@
 'use client';
 
+import { Drumstick, Smile, Zap } from 'lucide-react';
+
 export default function StatBars({ stats }: { stats: { hunger: number; mood: number; energy: number } }) {
-  const renderBar = (label: string, value: number, emoji: string, colorClass: string) => (
+  const renderBar = (label: string, value: number, emoji: React.ReactNode, colorClass: string) => (
     <div className="flex items-center justify-between gap-4 font-mono text-sm">
-      <div className="flex items-center gap-2 w-24">
-        <span>{emoji}</span>
+      <div className="flex items-center gap-2 w-28">
+        {emoji}
         <span className="text-[var(--gochi-muted)]">{label}</span>
       </div>
       
@@ -26,9 +28,9 @@ export default function StatBars({ stats }: { stats: { hunger: number; mood: num
 
   return (
     <div className="space-y-4 p-5 bg-[var(--gochi-panel)] border border-[var(--gochi-border)] rounded-xl shadow-lg">
-      {renderBar('Hunger', stats.hunger, '🍖', stats.hunger < 30 ? 'bg-[var(--gochi-red)]' : 'bg-[var(--gochi-green)]')}
-      {renderBar('Mood', stats.mood, '😊', 'bg-gradient-to-r from-[var(--gochi-cyan)] to-[var(--gochi-purple)]')}
-      {renderBar('Energy', stats.energy, '⚡', stats.energy < 20 ? 'bg-[var(--gochi-amber)] animate-pulse' : 'bg-[var(--gochi-pixel)]')}
+      {renderBar('Hunger', stats.hunger, <Drumstick className="w-4 h-4 text-[#fca5a5]" />, stats.hunger < 30 ? 'bg-[var(--gochi-red)]' : 'bg-[var(--gochi-green)]')}
+      {renderBar('Mood', stats.mood, <Smile className="w-4 h-4 text-[#67e8f9]" />, 'bg-gradient-to-r from-[var(--gochi-cyan)] to-[var(--gochi-purple)]')}
+      {renderBar('Energy', stats.energy, <Zap className="w-4 h-4 text-[#d8b4fe]" />, stats.energy < 20 ? 'bg-[var(--gochi-amber)] animate-pulse' : 'bg-[var(--gochi-pixel)]')}
     </div>
   );
 }

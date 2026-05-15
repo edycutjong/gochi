@@ -1,5 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
+import { Ghost, Moon } from 'lucide-react';
 
 export default function PetViewport({ action = 'idle' }: { action?: 'idle' | 'feed' | 'play' | 'sleep' }) {
   const [frame, setFrame] = useState(0);
@@ -18,20 +19,23 @@ export default function PetViewport({ action = 'idle' }: { action?: 'idle' | 'fe
       {/* Glow */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(6,182,212,0.2),transparent_70%)] blur-xl transition-all duration-1000"></div>
 
-      {/* Pet Character (Placeholder CSS Art / Emoji) */}
+      {/* Pet Character */}
       <div 
-        className={`relative text-8xl transition-transform duration-300 ${
-          action === 'play' ? 'animate-bounce' : 
-          action === 'idle' && frame % 2 === 0 ? 'scale-y-95 translate-y-1' : ''
+        className={`relative transition-transform duration-300 ${
+          action === 'play' ? 'animate-bounce text-[#67e8f9]' : 
+          action === 'idle' && frame % 2 === 0 ? 'scale-y-95 translate-y-1 text-[var(--gochi-cyan)]' : 
+          action === 'sleep' ? 'text-[#d8b4fe] opacity-50' :
+          action === 'feed' ? 'text-[#fca5a5] scale-110' : 'text-[var(--gochi-cyan)]'
         }`}
-        style={{ imageRendering: 'pixelated' }}
       >
-        {action === 'sleep' ? '😴' : action === 'feed' ? '😋' : '👾'}
+        <Ghost className="w-32 h-32 drop-shadow-[0_0_15px_currentColor]" strokeWidth={1.5} />
       </div>
 
       {/* Action Particles */}
       {action === 'sleep' && (
-        <div className="absolute top-10 right-10 text-2xl animate-pulse text-[var(--gochi-purple)]">Zzz</div>
+        <div className="absolute top-10 right-10 animate-pulse text-[var(--gochi-purple)]">
+          <Moon className="w-8 h-8" />
+        </div>
       )}
     </div>
   );

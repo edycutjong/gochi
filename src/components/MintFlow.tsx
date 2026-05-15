@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { Egg, Ghost, Sparkles } from 'lucide-react';
 
 export default function MintFlow({ onMint }: { onMint: () => Promise<void> }) {
   const [isMinting, setIsMinting] = useState(false);
@@ -26,8 +27,17 @@ export default function MintFlow({ onMint }: { onMint: () => Promise<void> }) {
         <div className="absolute inset-0 bg-radial from-[var(--gochi-cyan)]/30 to-transparent blur-2xl animate-pulse"></div>
         
         {/* Egg or hatching effect */}
-        <div className="relative text-9xl z-10" style={{ imageRendering: 'pixelated' }}>
-          {stage === 'idle' ? '🥚' : stage === 'minting' ? '🥚✨' : '🐣'}
+        <div className="relative z-10 flex items-center justify-center">
+          {stage === 'idle' ? (
+            <Egg className="w-32 h-32 text-[var(--gochi-text)]" strokeWidth={1.5} />
+          ) : stage === 'minting' ? (
+            <div className="relative">
+              <Egg className="w-32 h-32 text-[var(--gochi-cyan)] animate-pulse" strokeWidth={1.5} />
+              <Sparkles className="absolute -top-4 -right-4 w-8 h-8 text-[var(--gochi-amber)] animate-spin-slow" />
+            </div>
+          ) : (
+            <Ghost className="w-32 h-32 text-[var(--gochi-cyan)] animate-bounce" strokeWidth={1.5} />
+          )}
         </div>
       </div>
 

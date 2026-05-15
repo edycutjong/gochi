@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { Drumstick, Gamepad2, Moon } from 'lucide-react';
 
 export default function ActionButtons({ onAction }: { onAction: (action: 'feed' | 'play' | 'sleep') => Promise<void> }) {
   const [loading, setLoading] = useState<'feed' | 'play' | 'sleep' | null>(null);
@@ -20,7 +21,7 @@ export default function ActionButtons({ onAction }: { onAction: (action: 'feed' 
         className={`${btnClass} bg-[#3f1616] border-[#ef4444] hover:bg-[#4f1616] text-[#fca5a5]`}
       >
         <span className="relative z-10 flex flex-col items-center gap-2">
-          <span className="text-2xl drop-shadow-md">🍖</span>
+          <Drumstick className="w-8 h-8 drop-shadow-md text-[#fca5a5]" />
           {loading === 'feed' ? '...' : 'FEED'}
         </span>
       </button>
@@ -31,7 +32,7 @@ export default function ActionButtons({ onAction }: { onAction: (action: 'feed' 
         className={`${btnClass} bg-[#083344] border-[#06b6d4] hover:bg-[#164e63] text-[#67e8f9]`}
       >
         <span className="relative z-10 flex flex-col items-center gap-2">
-          <span className="text-2xl drop-shadow-md">🎾</span>
+          <Gamepad2 className="w-8 h-8 drop-shadow-md text-[#67e8f9]" />
           {loading === 'play' ? '...' : 'PLAY'}
         </span>
       </button>
@@ -42,7 +43,7 @@ export default function ActionButtons({ onAction }: { onAction: (action: 'feed' 
         className={`${btnClass} bg-[#3b0764] border-[#a855f7] hover:bg-[#581c87] text-[#d8b4fe]`}
       >
         <span className="relative z-10 flex flex-col items-center gap-2">
-          <span className="text-2xl drop-shadow-md">😴</span>
+          <Moon className="w-8 h-8 drop-shadow-md text-[#d8b4fe]" />
           {loading === 'sleep' ? '...' : 'SLEEP'}
         </span>
       </button>

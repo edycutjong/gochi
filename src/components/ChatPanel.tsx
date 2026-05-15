@@ -1,5 +1,6 @@
 'use client';
 import { useState, useRef, useEffect } from 'react';
+import { Bot } from 'lucide-react';
 
 type Message = { id: string; sender: 'user' | 'gochi'; text: string };
 
@@ -54,20 +55,20 @@ export default function ChatPanel({ state }: { state: { hunger: number; mood: nu
       <div className="flex-1 overflow-y-auto p-4 space-y-4" ref={scrollRef}>
         {messages.map(msg => (
           <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className={`max-w-[80%] rounded-lg px-3 py-2 text-sm ${
+            <div className={`max-w-[80%] rounded-lg px-3 py-2 text-sm flex items-center ${
               msg.sender === 'user' 
                 ? 'bg-[#1e293b] text-white rounded-br-none' 
                 : 'bg-[#083344] text-[var(--gochi-cyan)] border border-[var(--gochi-cyan)]/30 rounded-bl-none'
             }`}>
-              {msg.sender === 'gochi' && <span className="mr-2 opacity-70">👾</span>}
-              {msg.text}
+              {msg.sender === 'gochi' && <Bot className="w-4 h-4 mr-2 opacity-70 shrink-0" />}
+              <span>{msg.text}</span>
             </div>
           </div>
         ))}
         {isTyping && (
           <div className="flex justify-start">
             <div className="bg-[#083344] text-[var(--gochi-cyan)] border border-[var(--gochi-cyan)]/30 rounded-lg rounded-bl-none px-3 py-2 text-sm flex gap-1 items-center">
-              <span className="mr-2 opacity-70">👾</span>
+              <Bot className="w-4 h-4 mr-2 opacity-70 shrink-0" />
               <span className="animate-bounce">.</span>
               <span className="animate-bounce" style={{ animationDelay: '0.2s' }}>.</span>
               <span className="animate-bounce" style={{ animationDelay: '0.4s' }}>.</span>

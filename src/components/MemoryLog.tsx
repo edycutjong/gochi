@@ -1,5 +1,7 @@
 'use client';
 
+import { Brain } from 'lucide-react';
+
 type Memory = {
   id: string;
   type: string;
@@ -23,7 +25,7 @@ export default function MemoryLog({ memories }: { memories: Memory[] }) {
     <div className="h-full flex flex-col bg-[var(--gochi-panel)] border border-[var(--gochi-border)] rounded-xl overflow-hidden shadow-lg">
       <div className="p-4 border-b border-[var(--gochi-border)] flex items-center justify-between bg-[var(--gochi-bg)]">
         <h3 className="font-display text-sm flex items-center gap-2">
-          <span>🧠</span> Core Memories
+          <Brain className="w-4 h-4 text-[var(--gochi-purple)]" /> Core Memories
         </h3>
       </div>
       
