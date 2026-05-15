@@ -59,9 +59,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${inter.variable} ${jetbrainsMono.variable} ${pressStart2p.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans bg-[var(--gochi-bg)] text-[var(--gochi-text)]">
+      <body className="min-h-full flex flex-col font-sans bg-[var(--gochi-bg)] text-[var(--gochi-text)]" suppressHydrationWarning>
         <Providers>
           <header className="flex-none h-16 border-b border-[var(--gochi-border)] bg-[var(--gochi-panel)] px-6 flex items-center justify-between sticky top-0 z-50">
             <div className="flex items-center gap-4">
