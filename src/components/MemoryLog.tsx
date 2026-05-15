@@ -56,7 +56,7 @@ export default function MemoryLog({ memories }: { memories: Memory[] }) {
               <div className="bg-[#0f172a] rounded p-2 text-[10px] font-mono space-y-1">
                 <div className="flex justify-between text-[var(--gochi-muted)]">
                   <span>Root:</span>
-                  <span className="text-[var(--gochi-cyan)]">{mem.merkleRoot.substring(0, 10)}...</span>
+                  <span className="text-[var(--gochi-cyan)]">{mem.merkleRoot ? `${mem.merkleRoot.substring(0, 10)}...` : 'Pending...'}</span>
                 </div>
                 <div className="flex justify-between pt-1 border-t border-[var(--gochi-border)]">
                   <a 
