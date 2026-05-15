@@ -11,7 +11,7 @@ export async function POST(request: Request) {
 Your current status (0-100 scale): Hunger: ${state?.hunger}, Mood: ${state?.mood}, Energy: ${state?.energy}.
 Talk like a digital cyberpunk pet. Keep responses short (1-2 sentences) and playful. React to your stats if they are extremely high or low.`;
 
-    const apiUrl = process.env.ROUTER_URL || "https://api.openai.com/v1/chat/completions";
+    const apiUrl = process.env.ROUTER_URL || (process.env.ROUTER_API_KEY ? "https://router-api-testnet.integratenetwork.work/v1/chat/completions" : "https://api.openai.com/v1/chat/completions");
     const apiKey = process.env.ROUTER_API_KEY || process.env.OPENAI_API_KEY;
 
     if (!apiKey) {
@@ -41,7 +41,16 @@ Talk like a digital cyberpunk pet. Keep responses short (1-2 sentences) and play
     });
 
     if (!response.ok) {
-      throw new Error(`API returned ${response.status}`);
+      console.warn(`Compute Router API returned ${response.status}`);
+      
+      let errorReason = "offline or 401";
+      if (response.status === 402) errorReason = "402 Payment Required - Top up on pc.0g.ai";
+      else if (response.status !== 401) errorReason = `error ${response.status}`;
+
+      let fallbackReply = `I'm your Gochi! Beep boop. (Compute Router ${errorReason})`;
+      if (state?.hunger < 50) fallbackReply += " *stomach growls*";
+      if (state?.energy < 30) fallbackReply += " zzz...";
+      return NextResponse.json({ success: true, reply: fallbackReply, latency: Date.now() - start });
     }
 
     const data = await response.json();
