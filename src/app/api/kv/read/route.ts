@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -9,12 +10,20 @@ export async function GET(request: Request) {
   }
 
   try {
-    // TODO: Integrate actual @0gfoundation/0g-storage-ts-sdk KV read
     const start = Date.now();
-    await new Promise(resolve => setTimeout(resolve, 5 + Math.random() * 5));
+    const { data, error } = await supabase
+      .from('gochi_kv')
+      .select('value')
+      .eq('key', key)
+      .single();
+
+    if (error && error.code !== 'PGRST116') { // PGRST116 is "No rows found"
+      throw error;
+    }
+
     const latency = Date.now() - start;
 
-    // Return dummy state for Gochi
+    // Return dummy state if no data found yet
     const dummyState = {
       hunger: 80,
       mood: 90,
@@ -24,10 +33,10 @@ export async function GET(request: Request) {
 
     return NextResponse.json({ 
       success: true, 
-      value: dummyState,
+      value: data?.value || dummyState,
       latency 
     });
-  } catch {
-    return NextResponse.json({ error: 'Failed to read from 0G KV Storage' }, { status: 500 });
+  } catch (err: any) {
+    return NextResponse.json({ error: 'Failed to read from KV Storage', details: err.message }, { status: 500 });
   }
 }

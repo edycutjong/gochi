@@ -1,21 +1,31 @@
 import { NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase';
 
 export async function POST(request: Request) {
   try {
-    await request.json();
+    const { key, value } = await request.json();
 
-    // TODO: Integrate actual @0gfoundation/0g-storage-ts-sdk KV write
-    // For now, simulate the <15ms latency for the hackathon demo
+    if (!key || value === undefined) {
+      return NextResponse.json({ error: 'Key and value are required' }, { status: 400 });
+    }
+
     const start = Date.now();
-    await new Promise(resolve => setTimeout(resolve, 8 + Math.random() * 5)); 
+    const { data, error } = await supabase
+      .from('gochi_kv')
+      .upsert({ key, value, updated_at: new Date().toISOString() })
+      .select();
+
+    if (error) throw error;
+
     const latency = Date.now() - start;
 
     return NextResponse.json({ 
       success: true, 
-      txHash: `0x${Math.random().toString(16).slice(2)}`, 
-      latency 
+      txHash: `0x${Math.random().toString(16).slice(2)}`, // Simulated 0G storage hash
+      latency,
+      data
     });
-  } catch {
-    return NextResponse.json({ error: 'Failed to write to 0G KV Storage' }, { status: 500 });
+  } catch (err: any) {
+    return NextResponse.json({ error: 'Failed to write to KV Storage', details: err.message }, { status: 500 });
   }
 }
