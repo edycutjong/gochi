@@ -1,65 +1,128 @@
-import Image from "next/image";
+'use client';
+import { useState, useEffect } from 'react';
+import { useAccount } from 'wagmi';
+import PetViewport from '@/components/PetViewport';
+import StatBars from '@/components/StatBars';
+import ActionButtons from '@/components/ActionButtons';
+import ChatPanel from '@/components/ChatPanel';
+import MemoryLog from '@/components/MemoryLog';
+import LatencyMonitor from '@/components/LatencyMonitor';
+import MintFlow from '@/components/MintFlow';
+
+type Memory = {
+  id: string;
+  type: string;
+  title: string;
+  time: string;
+  merkleRoot: string;
+  txHash: string;
+};
 
 export default function Home() {
+  const { isConnected } = useAccount();
+  const [isMinted, setIsMinted] = useState(false);
+  const [action, setAction] = useState<'idle' | 'feed' | 'play' | 'sleep'>('idle');
+  
+  const [stats, setStats] = useState({ hunger: 70, mood: 80, energy: 60 });
+  const [memories, setMemories] = useState<Memory[]>([]);
+  const [latencies, setLatencies] = useState({ kvRead: null, kvWrite: null, log: null, ai: null });
+
+  // Simulate reading initial state on load
+  useEffect(() => {
+    if (isMinted && isConnected) {
+      fetch('/api/kv/read?key=gochi_state')
+        .then(res => res.json())
+        .then(data => {
+          if (data.value) setStats({ hunger: data.value.hunger, mood: data.value.mood, energy: data.value.energy });
+          if (data.latency) setLatencies(l => ({ ...l, kvRead: data.latency }));
+        })
+        .catch(console.error);
+    }
+  }, [isMinted, isConnected]);
+
+  const handleAction = async (newAction: 'feed' | 'play' | 'sleep') => {
+    setAction(newAction);
+    
+    // Optimistic UI update
+    const newStats = { ...stats };
+    if (newAction === 'feed') newStats.hunger = Math.min(100, newStats.hunger + 20);
+    if (newAction === 'play') { newStats.mood = Math.min(100, newStats.mood + 15); newStats.energy = Math.max(0, newStats.energy - 10); }
+    if (newAction === 'sleep') newStats.energy = Math.min(100, newStats.energy + 30);
+    setStats(newStats);
+
+    // Write to KV
+    try {
+      const res = await fetch('/api/kv/write', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ key: 'gochi_state', value: newStats })
+      });
+      const data = await res.json();
+      if (data.latency) setLatencies(l => ({ ...l, kvWrite: data.latency }));
+
+      // Archive memory if milestone
+      if (Math.random() > 0.5) { // Simulate random milestone for hackathon demo
+        const logRes = await fetch('/api/log/archive', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ memory: `Performed action: ${newAction}` })
+        });
+        const logData = await logRes.json();
+        if (logData.latency) setLatencies(l => ({ ...l, log: logData.latency }));
+        
+        setMemories(prev => [{
+          id: Date.now().toString(),
+          type: newAction.toUpperCase(),
+          title: `Gochi felt ${newAction === 'feed' ? 'full' : newAction === 'play' ? 'happy' : 'rested'}!`,
+          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          merkleRoot: logData.merkleRoot,
+          txHash: data.txHash
+        }, ...prev]);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+
+    setTimeout(() => setAction('idle'), 2000);
+  };
+
+  if (!isConnected) {
+    return (
+      <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-[var(--gochi-muted)] font-mono space-y-4 min-h-[50vh]">
+        <div className="text-4xl animate-pulse mb-4">🔌</div>
+        <p>Please connect your wallet to interact with your Gochi.</p>
+        <p className="text-xs opacity-50">Make sure you are on the 0G Mainnet (Chain ID: 16661).</p>
+      </div>
+    );
+  }
+
+  if (!isMinted) {
+    return <MintFlow onMint={async () => setIsMinted(true)} />;
+  }
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto h-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-6">
+      
+      {/* Left Column: Pet & Actions */}
+      <div className="xl:col-span-4 flex flex-col gap-6">
+        <PetViewport action={action} />
+        <StatBars stats={stats} />
+        <ActionButtons onAction={handleAction} />
+      </div>
+
+      {/* Center Column: Chat Panel */}
+      <div className="xl:col-span-5 h-[500px] md:h-[600px] xl:h-auto">
+        <ChatPanel state={stats} />
+      </div>
+
+      {/* Right Column: Memory Log & Latency */}
+      <div className="xl:col-span-3 flex flex-col gap-6 h-[500px] md:h-[600px] xl:h-auto">
+        <div className="flex-1 min-h-0">
+          <MemoryLog memories={memories} />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+        <LatencyMonitor latencies={latencies} />
+      </div>
+
     </div>
   );
 }
