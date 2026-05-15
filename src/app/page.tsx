@@ -1,129 +1,76 @@
-'use client';
-import { useState, useEffect } from 'react';
-import { useAccount } from 'wagmi';
-import { Plug } from 'lucide-react';
-import PetViewport from '@/components/PetViewport';
-import StatBars from '@/components/StatBars';
-import ActionButtons from '@/components/ActionButtons';
-import ChatPanel from '@/components/ChatPanel';
-import MemoryLog from '@/components/MemoryLog';
-import LatencyMonitor from '@/components/LatencyMonitor';
-import MintFlow from '@/components/MintFlow';
+import Link from "next/link";
+import { Brain, Database, Shield, Zap } from "lucide-react";
 
-type Memory = {
-  id: string;
-  type: string;
-  title: string;
-  time: string;
-  merkleRoot: string;
-  txHash: string;
-};
-
-export default function Home() {
-  const { isConnected } = useAccount();
-  const [isMinted, setIsMinted] = useState(false);
-  const [action, setAction] = useState<'idle' | 'feed' | 'play' | 'sleep'>('idle');
-  
-  const [stats, setStats] = useState({ hunger: 70, mood: 80, energy: 60 });
-  const [memories, setMemories] = useState<Memory[]>([]);
-  const [latencies, setLatencies] = useState({ kvRead: null, kvWrite: null, log: null, ai: null });
-
-  // Simulate reading initial state on load
-  useEffect(() => {
-    if (isMinted && isConnected) {
-      fetch('/api/kv/read?key=gochi_state')
-        .then(res => res.json())
-        .then(data => {
-          if (data.value) setStats({ hunger: data.value.hunger, mood: data.value.mood, energy: data.value.energy });
-          if (data.latency) setLatencies(l => ({ ...l, kvRead: data.latency }));
-        })
-        .catch(console.error);
-    }
-  }, [isMinted, isConnected]);
-
-  const handleAction = async (newAction: 'feed' | 'play' | 'sleep') => {
-    setAction(newAction);
-    
-    // Optimistic UI update
-    const newStats = { ...stats };
-    if (newAction === 'feed') newStats.hunger = Math.min(100, newStats.hunger + 20);
-    if (newAction === 'play') { newStats.mood = Math.min(100, newStats.mood + 15); newStats.energy = Math.max(0, newStats.energy - 10); }
-    if (newAction === 'sleep') newStats.energy = Math.min(100, newStats.energy + 30);
-    setStats(newStats);
-
-    // Write to KV
-    try {
-      const res = await fetch('/api/kv/write', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ key: 'gochi_state', value: newStats })
-      });
-      const data = await res.json();
-      if (data.latency) setLatencies(l => ({ ...l, kvWrite: data.latency }));
-
-      // Archive memory if milestone
-      if (Math.random() > 0.5) { // Simulate random milestone for hackathon demo
-        const logRes = await fetch('/api/log/archive', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ memory: `Performed action: ${newAction}` })
-        });
-        const logData = await logRes.json();
-        if (logData.latency) setLatencies(l => ({ ...l, log: logData.latency }));
-        
-        setMemories(prev => [{
-          id: Date.now().toString(),
-          type: newAction.toUpperCase(),
-          title: `Gochi felt ${newAction === 'feed' ? 'full' : newAction === 'play' ? 'happy' : 'rested'}!`,
-          time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-          merkleRoot: logData.merkleRoot,
-          txHash: data.txHash
-        }, ...prev]);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-
-    setTimeout(() => setAction('idle'), 2000);
-  };
-
-  if (!isConnected) {
-    return (
-      <div className="flex-1 flex flex-col items-center justify-center p-8 text-center text-[var(--gochi-muted)] font-mono space-y-4 min-h-[50vh]">
-        <Plug className="w-12 h-12 animate-pulse mb-4 text-[var(--gochi-cyan)] opacity-80" />
-        <p>Please connect your wallet to interact with your Gochi.</p>
-        <p className="text-xs opacity-50">Make sure you are on the 0G Mainnet (Chain ID: 16661).</p>
-      </div>
-    );
-  }
-
-  if (!isMinted) {
-    return <MintFlow onMint={async () => setIsMinted(true)} />;
-  }
-
+export default function LandingPage() {
   return (
-    <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto h-full xl:h-[calc(100vh-5rem)] grid grid-cols-1 md:grid-cols-2 xl:grid-cols-12 gap-6">
-      
-      {/* Left Column: Pet & Actions */}
-      <div className="xl:col-span-4 flex flex-col gap-6">
-        <PetViewport action={action} />
-        <StatBars stats={stats} />
-        <ActionButtons onAction={handleAction} />
+    <div className="relative min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center overflow-hidden">
+      {/* Background animations */}
+      <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 cyber-grid opacity-30"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-[var(--gochi-cyan)] opacity-[0.05] blur-[100px] rounded-full mix-blend-screen pointer-events-none"></div>
       </div>
 
-      {/* Center Column: Chat Panel */}
-      <div className="xl:col-span-5 h-[500px] md:h-[600px] xl:h-full">
-        <ChatPanel state={stats} />
-      </div>
-
-      {/* Right Column: Memory Log & Latency */}
-      <div className="xl:col-span-3 flex flex-col gap-6 h-[500px] md:h-[600px] xl:h-full">
-        <div className="flex-1 min-h-0">
-          <MemoryLog memories={memories} />
+      <div className="z-10 w-full max-w-5xl px-6 flex flex-col items-center text-center space-y-12 py-12">
+        {/* Hero Section */}
+        <div className="space-y-6 animate-float">
+          <h1 
+            className="font-display text-5xl md:text-7xl lg:text-8xl glitch-text" 
+            data-text="GOCHI"
+          >
+            GOCHI
+          </h1>
+          <p className="font-mono text-lg md:text-xl text-[var(--gochi-muted)] max-w-2xl mx-auto neon-text">
+            The first fully autonomous, on-chain virtual pet powered by 0G Network's Storage and Compute AI.
+          </p>
         </div>
-        <LatencyMonitor latencies={latencies} />
-      </div>
 
+        {/* CTA */}
+        <div className="pt-4">
+          <Link 
+            href="/play" 
+            className="group relative inline-flex items-center justify-center px-8 py-4 font-mono font-bold text-white transition-all duration-200 bg-transparent border-2 border-[var(--gochi-cyan)] rounded hover:bg-[var(--gochi-cyan)]/10 neon-border overflow-hidden"
+          >
+            <span className="absolute inset-0 w-full h-full -mt-1 rounded opacity-30 bg-gradient-to-b from-transparent via-transparent to-[var(--gochi-cyan)]"></span>
+            <span className="relative flex items-center gap-2">
+              <Zap className="w-5 h-5 text-[var(--gochi-cyan)] group-hover:animate-pulse" />
+              ENTER 0G NETWORK
+            </span>
+          </Link>
+        </div>
+
+        {/* Feature Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full pt-16">
+          <FeatureCard 
+            icon={<Database className="w-8 h-8 text-[var(--gochi-cyan)]" />}
+            title="On-Chain Memory"
+            description="Every state change and interaction is immutably stored via 0G Storage KV and Storage Log."
+          />
+          <FeatureCard 
+            icon={<Brain className="w-8 h-8 text-[var(--gochi-purple)]" />}
+            title="0G Compute AI"
+            description="Your Gochi thinks and responds using decentralized inferencing via the 0G Compute Router."
+          />
+          <FeatureCard 
+            icon={<Shield className="w-8 h-8 text-[var(--gochi-green)]" />}
+            title="Autonomous"
+            description="100% decentralized. No central servers. Your pet lives forever on the blockchain."
+          />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function FeatureCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
+  return (
+    <div className="glass-panel p-8 rounded-lg text-left space-y-4 hover:border-[var(--gochi-cyan)]/50 transition-colors group">
+      <div className="p-3 bg-[var(--gochi-bg)]/50 rounded-lg inline-block neon-border group-hover:scale-110 transition-transform">
+        {icon}
+      </div>
+      <h3 className="font-display text-lg text-[var(--gochi-text)]">{title}</h3>
+      <p className="font-mono text-sm text-[var(--gochi-muted)] leading-relaxed">
+        {description}
+      </p>
     </div>
   );
 }

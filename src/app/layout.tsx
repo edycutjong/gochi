@@ -73,7 +73,7 @@ export default function RootLayout({
                 <h1 className="font-display text-[var(--gochi-cyan)] text-xl tracking-tighter">GOCHI</h1>
               </div>
               <div className="hidden sm:block px-2 py-0.5 rounded border border-[var(--gochi-cyan)]/30 bg-[var(--gochi-cyan)]/10 text-[var(--gochi-cyan)] font-mono text-[10px] shadow-[0_0_10px_rgba(6,182,212,0.1)]">
-                0G MAINNET
+                0G TESTNET
               </div>
             </div>
             <div className="flex items-center gap-4">
