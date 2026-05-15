@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <!-- Brand gradient with CSS var fallback -->
+    <linearGradient id="brand" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="var(--primary, #06B6D4)"/>
+      <stop offset="100%" stop-color="var(--accent, #A855F7)"/>
+    </linearGradient>
+    <!-- Inner glow filter -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="12" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+    <!-- Outer soft glow -->
+    <filter id="outerGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="20" result="blur"/>
+      <feFlood flood-color="var(--primary, #06B6D4)" flood-opacity="0.3" result="color"/>
+      <feComposite in="color" in2="blur" operator="in" result="glow"/>
+      <feMerge>
+        <feMergeNode in="glow"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Background circle (subtle) -->
+  <circle cx="256" cy="256" r="240" fill="none" stroke="url(#brand)" stroke-width="2" opacity="0.15"/>
+
+  <!-- Outer ring — represents the 0G chain / permanence -->
+  <circle cx="256" cy="256" r="200" fill="none" stroke="url(#brand)" stroke-width="3" opacity="0.4"
+    stroke-dasharray="20 10" stroke-linecap="round"/>
+
+  <!-- Core pet shape — abstract rounded creature silhouette -->
+  <g filter="url(#outerGlow)">
+    <!-- Body — rounded blob -->
+    <path d="
+      M 256 120
+      C 340 120, 400 180, 400 256
+      C 400 340, 340 400, 256 400
+      C 172 400, 112 340, 112 256
+      C 112 180, 172 120, 256 120
+      Z
+    " fill="url(#brand)" opacity="0.9"/>
+
+    <!-- Left ear -->
+    <path d="
+      M 175 175
+      C 155 120, 175 90, 200 130
+      C 210 145, 185 165, 175 175
+      Z
+    " fill="url(#brand)"/>
+
+    <!-- Right ear -->
+    <path d="
+      M 337 175
+      C 357 120, 337 90, 312 130
+      C 302 145, 327 165, 337 175
+      Z
+    " fill="url(#brand)"/>
+  </g>
+
+  <!-- Eyes — two bright dots -->
+  <circle cx="210" cy="250" r="22" fill="#020617"/>
+  <circle cx="302" cy="250" r="22" fill="#020617"/>
+
+  <!-- Eye highlights — life spark -->
+  <circle cx="218" cy="242" r="8" fill="#F8FAFC" opacity="0.95"/>
+  <circle cx="310" cy="242" r="8" fill="#F8FAFC" opacity="0.95"/>
+
+  <!-- Small eye highlight 2 -->
+  <circle cx="204" cy="258" r="4" fill="#F8FAFC" opacity="0.5"/>
+  <circle cx="296" cy="258" r="4" fill="#F8FAFC" opacity="0.5"/>
+
+  <!-- Mouth — small happy curve -->
+  <path d="M 230 310 Q 256 335 282 310" fill="none" stroke="#020617" stroke-width="5" stroke-linecap="round"/>
+
+  <!-- Cheek blush marks -->
+  <ellipse cx="165" cy="290" rx="18" ry="10" fill="var(--accent, #A855F7)" opacity="0.25"/>
+  <ellipse cx="347" cy="290" rx="18" ry="10" fill="var(--primary, #06B6D4)" opacity="0.25"/>
+
+  <!-- Digital sparkle dots — representing data/memories -->
+  <circle cx="130" cy="160" r="3" fill="var(--primary, #06B6D4)" opacity="0.6"/>
+  <circle cx="390" cy="145" r="2.5" fill="var(--accent, #A855F7)" opacity="0.5"/>
+  <circle cx="100" cy="350" r="2" fill="var(--primary, #06B6D4)" opacity="0.4"/>
+  <circle cx="420" cy="370" r="3" fill="var(--accent, #A855F7)" opacity="0.5"/>
+  <circle cx="256" cy="80" r="2.5" fill="var(--primary, #06B6D4)" opacity="0.4"/>
+  <circle cx="440" cy="240" r="2" fill="var(--accent, #A855F7)" opacity="0.3"/>
+  <circle cx="70" cy="260" r="2" fill="var(--primary, #06B6D4)" opacity="0.35"/>
+</svg>
