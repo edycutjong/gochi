@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { kvWrite, is0GConfigured } from '@/lib/zero-g';
 
 export async function POST(request: Request) {
   try {
@@ -10,22 +11,43 @@ export async function POST(request: Request) {
     }
 
     const start = Date.now();
-    const { data, error } = await supabase
-      .from('gochi_kv')
-      .upsert({ key, value, updated_at: new Date().toISOString() })
-      .select();
+    let txHash: string;
+    let rootHash: string | undefined;
+    let source: 'zerog' | 'supabase';
 
-    if (error) throw error;
+    if (is0GConfigured()) {
+      try {
+        const result = await kvWrite(`gochi:${key}`, value);
+        txHash = result.txHash;
+        rootHash = result.rootHash;
+        source = 'zerog';
+      } catch (zkErr: unknown) {
+        console.warn('0G KV write failed, falling back to Supabase:', zkErr instanceof Error ? zkErr.message : zkErr);
+        const { error } = await supabase
+          .from('gochi_kv')
+          .upsert({ key, value, updated_at: new Date().toISOString() });
+        if (error) throw error;
+        txHash = `0x${Date.now().toString(16).padStart(64, '0')}`;
+        source = 'supabase';
+      }
+    } else {
+      const { error } = await supabase
+        .from('gochi_kv')
+        .upsert({ key, value, updated_at: new Date().toISOString() });
+      if (error) throw error;
+      txHash = `0x${Date.now().toString(16).padStart(64, '0')}`;
+      source = 'supabase';
+    }
 
-    const latency = Date.now() - start;
-
-    return NextResponse.json({ 
-      success: true, 
-      txHash: `0x${Math.random().toString(16).slice(2)}`, // Simulated 0G storage hash
-      latency,
-      data
+    return NextResponse.json({
+      success: true,
+      txHash,
+      rootHash,
+      source,
+      latency: Date.now() - start,
     });
-  } catch (err: any) {
-    return NextResponse.json({ error: 'Failed to write to KV Storage', details: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    return NextResponse.json({ error: 'Failed to write to KV Storage', details: message }, { status: 500 });
   }
 }

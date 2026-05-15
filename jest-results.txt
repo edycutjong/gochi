@@ -1,0 +1,372 @@
+FAIL src/app/api/kv/read/route.test.ts
+  ● Test suite failed to run
+
+    ReferenceError: Request is not defined
+
+       9 |     return NextResponse.json({ error: 'Key is required' }, { status: 400 });
+      10 |   }
+    > 11 |
+         | ^
+      12 |   try {
+      13 |     const start = Date.now();
+      14 |     const { data, error } = await supabase
+
+      at Object.Request (node_modules/next/src/server/web/spec-extension/request.ts:14:34)
+      at Object.<anonymous> (node_modules/next/server.js:2:16)
+      at Object.<anonymous> (src/app/api/kv/read/route.ts:11:17)
+      at Object.<anonymous> (src/app/api/kv/read/route.test.ts:10:16)
+
+FAIL src/app/api/log/archive/route.test.ts
+  ● Test suite failed to run
+
+    ReferenceError: Request is not defined
+
+       9 |       return NextResponse.json({ error: 'Action content is required' }, { status: 400 });
+      10 |     }
+    > 11 |
+         | ^
+      12 |     const start = Date.now();
+      13 |     const merkleRoot = `0x${Math.random().toString(16).slice(2).padStart(64, '0')}`;
+      14 |     const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      at Object.Request (node_modules/next/src/server/web/spec-extension/request.ts:14:34)
+      at Object.<anonymous> (node_modules/next/server.js:2:16)
+      at Object.<anonymous> (src/app/api/log/archive/route.ts:11:17)
+      at Object.<anonymous> (src/app/api/log/archive/route.test.ts:10:16)
+
+FAIL src/app/api/chat/route.test.ts
+  ● Test suite failed to run
+
+    ReferenceError: Request is not defined
+
+       9 |     
+      10 |     const systemPrompt = `You are an on-chain virtual pet called Gochi living on the 0G network.
+    > 11 | Your current status (0-100 scale): Hunger: ${state?.hunger}, Mood: ${state?.mood}, Energy: ${state?.energy}.
+         |                 ^
+      12 | Talk like a digital cyberpunk pet. Keep responses short (1-2 sentences) and playful. React to your stats if they are extremely high or low.`;
+      13 |
+      14 |     const apiUrl = process.env.ROUTER_URL || (process.env.ROUTER_API_KEY ? "https://router-api-testnet.integratenetwork.work/v1/chat/completions" : "https://api.openai.com/v1/chat/completions");
+
+      at Object.Request (node_modules/next/src/server/web/spec-extension/request.ts:14:34)
+      at Object.<anonymous> (node_modules/next/server.js:2:16)
+      at Object.<anonymous> (src/app/api/chat/route.ts:11:17)
+      at Object.<anonymous> (src/app/api/chat/route.test.ts:5:16)
+
+FAIL src/app/api/kv/write/route.test.ts
+  ● Test suite failed to run
+
+    ReferenceError: Request is not defined
+
+       9 |       return NextResponse.json({ error: 'Key and value are required' }, { status: 400 });
+      10 |     }
+    > 11 |
+         | ^
+      12 |     const start = Date.now();
+      13 |     const { data, error } = await supabase
+      14 |       .from('gochi_kv')
+
+      at Object.Request (node_modules/next/src/server/web/spec-extension/request.ts:14:34)
+      at Object.<anonymous> (node_modules/next/server.js:2:16)
+      at Object.<anonymous> (src/app/api/kv/write/route.ts:11:17)
+      at Object.<anonymous> (src/app/api/kv/write/route.test.ts:10:16)
+
+FAIL src/lib/supabase.test.ts
+  ● supabase client › should initialize with valid env variables
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: "http://localhost:54321", "valid_key"
+
+    Number of calls: 0
+
+      27 |     require('./supabase');
+      28 |
+    > 29 |     expect(createClient).toHaveBeenCalledWith('http://localhost:54321', 'valid_key');
+         |                          ^
+      30 |     expect(consoleWarnSpy).not.toHaveBeenCalled();
+      31 |   });
+      32 |
+
+      at Object.toHaveBeenCalledWith (src/lib/supabase.test.ts:29:26)
+
+  ● supabase client › should fall back to NEXT_PUBLIC_SUPABASE_ANON_KEY if service role key is missing
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: "http://localhost:54321", "anon_key"
+
+    Number of calls: 0
+
+      39 |     require('./supabase');
+      40 |
+    > 41 |     expect(createClient).toHaveBeenCalledWith('http://localhost:54321', 'anon_key');
+         |                          ^
+      42 |     expect(consoleWarnSpy).not.toHaveBeenCalled();
+      43 |   });
+      44 |
+
+      at Object.toHaveBeenCalledWith (src/lib/supabase.test.ts:41:26)
+
+  ● supabase client › should warn if supabase keys are missing
+
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+
+    Expected: "", ""
+
+    Number of calls: 0
+
+      51 |     require('./supabase');
+      52 |
+    > 53 |     expect(createClient).toHaveBeenCalledWith('', '');
+         |                          ^
+      54 |     expect(consoleWarnSpy).toHaveBeenCalledWith('Supabase URL or Key is missing. Check your .env.local file.');
+      55 |   });
+      56 | });
+
+      at Object.toHaveBeenCalledWith (src/lib/supabase.test.ts:53:26)
+
+FAIL src/app/providers.test.tsx
+  ● Test suite failed to run
+
+    Jest encountered an unexpected token
+
+    Jest failed to parse a file. This happens e.g. when your code or its dependencies use non-standard JavaScript syntax, or when Jest is not configured to support such syntax.
+
+    Out of the box Jest supports Babel, which will be used to transform your files into valid JS based on your Babel configuration.
+
+    By default "node_modules" folder is ignored by transformers.
+
+    Here's what you can do:
+     • If you are trying to use ECMAScript Modules, see https://jestjs.io/docs/ecmascript-modules for how to enable it.
+     • If you are trying to use TypeScript, see https://jestjs.io/docs/getting-started#using-typescript
+     • To have some of your "node_modules" files transformed, you can specify a custom "transformIgnorePatterns" in your config.
+     • If you need a custom transformation, specify a "transform" option in your config.
+     • If you simply want to mock your non-JS modules (e.g. binary assets) you can stub them out with the "moduleNameMapper" config option.
+
+    You'll find more details and examples of these config options in the docs:
+    https://jestjs.io/docs/configuration
+    For information about custom transformations, see:
+    https://jestjs.io/docs/code-transformation
+
+    Details:
+
+    /Users/edycu/Projects/Hackathon/Gochi/node_modules/wagmi/dist/esm/exports/index.js:5
+    export { WagmiContext, WagmiProvider, } from '../context.js';
+    ^^^^^^
+
+    SyntaxError: Unexpected token 'export'
+
+       5 | // Mock wagmi and react-query to prevent actual initialization issues
+       6 | jest.mock('wagmi', () => {
+    >  7 |   const original = jest.requireActual('wagmi');
+         |                         ^
+       8 |   return {
+       9 |     ...original,
+      10 |     WagmiProvider: ({ children }: { children: React.ReactNode }) => <div data-testid="wagmi-provider">{children}</div>,
+
+      at ModuleExecutor.compile (node_modules/jest-runtime/build/index.js:2104:44)
+      at requireActual (src/app/providers.test.tsx:7:25)
+      at Object.<anonymous> (src/app/providers.tsx:14:16)
+      at Object.<anonymous> (src/app/providers.test.tsx:31:20)
+
+FAIL src/components/WalletConnect.test.tsx
+  ● WalletConnect › renders loading state initially
+
+    TestingLibraryElementError: Unable to find an element with the text: Loading.... This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"flex items-center gap-2"[39m
+        [36m>[39m
+          [36m<span[39m
+            [33mclass[39m=[32m"hidden sm:inline-block font-mono text-[10px] text-[var(--gochi-text)] opacity-70"[39m
+          [36m>[39m
+            [0m0x1234[0m
+            [0m...[0m
+            [0m7890[0m
+          [36m</span>[39m
+          [36m<button[39m
+            [33mclass[39m=[32m"bg-[var(--gochi-panel)] hover:bg-red-500/10 text-red-400 border border-[var(--gochi-border)] hover:border-red-500/30 transition-colors px-4 py-2 rounded-none font-mono text-xs shadow-[0_0_10px_rgba(239,68,68,0.1)]"[39m
+          [36m>[39m
+            [0mDisconnect[0m
+          [36m</button>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+      11 |   it('renders loading state initially', () => {
+      12 |     const { container } = render(<WalletConnect />);
+    > 13 |     expect(screen.getByText('Loading...')).toBeInTheDocument();
+         |                   ^
+      14 |     expect(container.querySelector('.cursor-not-allowed')).toBeInTheDocument();
+      15 |   });
+      16 |
+
+      at Object.getElementError (node_modules/@testing-library/dom/dist/config.js:37:19)
+      at node_modules/@testing-library/dom/dist/query-helpers.js:76:38
+      at node_modules/@testing-library/dom/dist/query-helpers.js:52:17
+      at node_modules/@testing-library/dom/dist/query-helpers.js:95:19
+      at Object.getByText (src/components/WalletConnect.test.tsx:13:19)
+
+FAIL src/components/ChatPanel.test.tsx
+  ● ChatPanel › renders initial message
+
+    Property `fetch` does not exist in the provided object
+
+       8 |
+       9 |   beforeEach(() => {
+    > 10 |     fetchSpy = jest.spyOn(global, 'fetch').mockResolvedValue({
+         |                     ^
+      11 |       json: async () => ({ reply: 'I am a test reply', latency: 123 }),
+      12 |     } as any);
+      13 |   });
+
+      at ModuleMocker.spyOn (node_modules/jest-mock/build/index.js:593:13)
+      at Object.spyOn (src/components/ChatPanel.test.tsx:10:21)
+
+  ● ChatPanel › allows user to send a message and displays response
+
+    Property `fetch` does not exist in the provided object
+
+       8 |
+       9 |   beforeEach(() => {
+    > 10 |     fetchSpy = jest.spyOn(global, 'fetch').mockResolvedValue({
+         |                     ^
+      11 |       json: async () => ({ reply: 'I am a test reply', latency: 123 }),
+      12 |     } as any);
+      13 |   });
+
+      at ModuleMocker.spyOn (node_modules/jest-mock/build/index.js:593:13)
+      at Object.spyOn (src/components/ChatPanel.test.tsx:10:21)
+
+  ● ChatPanel › does not send empty messages
+
+    Property `fetch` does not exist in the provided object
+
+       8 |
+       9 |   beforeEach(() => {
+    > 10 |     fetchSpy = jest.spyOn(global, 'fetch').mockResolvedValue({
+         |                     ^
+      11 |       json: async () => ({ reply: 'I am a test reply', latency: 123 }),
+      12 |     } as any);
+      13 |   });
+
+      at ModuleMocker.spyOn (node_modules/jest-mock/build/index.js:593:13)
+      at Object.spyOn (src/components/ChatPanel.test.tsx:10:21)
+
+  ● ChatPanel › handles API errors gracefully
+
+    Property `fetch` does not exist in the provided object
+
+       8 |
+       9 |   beforeEach(() => {
+    > 10 |     fetchSpy = jest.spyOn(global, 'fetch').mockResolvedValue({
+         |                     ^
+      11 |       json: async () => ({ reply: 'I am a test reply', latency: 123 }),
+      12 |     } as any);
+      13 |   });
+
+      at ModuleMocker.spyOn (node_modules/jest-mock/build/index.js:593:13)
+      at Object.spyOn (src/components/ChatPanel.test.tsx:10:21)
+
+FAIL src/components/PetViewport.test.tsx
+  ● Console
+
+    console.error
+      An update to PetViewport inside a test was not wrapped in act(...).
+      
+      When testing, code that causes React state updates should be wrapped into act(...):
+      
+      act(() => {
+        /* fire events that update state */
+      });
+      /* assert on the output */
+      
+      This ensures that you're testing the behavior the user would see in the browser. Learn more at https://react.dev/link/wrap-tests-with-act
+
+       8 |   // Simple animation loop
+       9 |   useEffect(() => {
+    > 10 |     const interval = setInterval(() => setFrame((f) => (f + 1) % 4), 500);
+         |                                        ^
+      11 |     return () => clearInterval(interval);
+      12 |   }, []);
+      13 |
+
+      at node_modules/react-dom/cjs/react-dom-client.development.js:18758:19
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at warnIfUpdatesNotWrappedWithActDEV (node_modules/react-dom/cjs/react-dom-client.development.js:18757:9)
+      at scheduleUpdateOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:16409:11)
+      at dispatchSetStateInternal (node_modules/react-dom/cjs/react-dom-client.development.js:9170:13)
+      at dispatchSetState (node_modules/react-dom/cjs/react-dom-client.development.js:9127:7)
+      at setFrame (src/components/PetViewport.tsx:10:40)
+      at callTimer (node_modules/@sinonjs/fake-timers/src/fake-timers-src.js:1525:24)
+      at runTimersInRange (node_modules/@sinonjs/fake-timers/src/fake-timers-src.js:2223:25)
+      at doTickInner (node_modules/@sinonjs/fake-timers/src/fake-timers-src.js:2318:21)
+      at doTick (node_modules/@sinonjs/fake-timers/src/fake-timers-src.js:2334:20)
+      at Object.tick (node_modules/@sinonjs/fake-timers/src/fake-timers-src.js:2342:20)
+      at FakeTimers.advanceTimersByTime (node_modules/@jest/fake-timers/build/index.js:580:19)
+      at Object.advanceTimersByTime (src/components/PetViewport.test.tsx:38:10)
+
+  ● PetViewport › updates frame on interval
+
+    expect(element).not.toBeInTheDocument()
+
+    expected document not to contain element, found <div class="relative transition-transform duration-300 scale-y-95 translate-y-1 text-[var(--gochi-cyan)]"><svg aria-hidden="true" class="lucide lucide-ghost w-32 h-32 drop-shadow-[0_0_15px_currentColor]" fill="none" height="24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M9 10h.01" /><path d="M15 10h.01" /><path d="M12 2a8 8 0 0 0-8 8v12l3-3 2.5 2.5L12 19l2.5 2.5L17 19l3 3V10a8 8 0 0 0-8-8z" /></svg></div> instead
+
+      38 |     jest.advanceTimersByTime(500);
+      39 |     // Frame (1) -> frame % 2 !== 0
+    > 40 |     expect(container.querySelector('.scale-y-95')).not.toBeInTheDocument();
+         |                                                        ^
+      41 |
+      42 |     // Advance 500ms
+      43 |     jest.advanceTimersByTime(500);
+
+      at Object.toBeInTheDocument (src/components/PetViewport.test.tsx:40:56)
+
+PASS src/components/StatBars.test.tsx
+PASS src/components/LatencyMonitor.test.tsx
+PASS src/app/layout.test.tsx
+  ● Console
+
+    console.error
+      In HTML, <html> cannot be a child of <div>.
+      This will cause a hydration error.
+
+      21 | describe('RootLayout', () => {
+      22 |   it('renders children within providers and header', () => {
+    > 23 |     render(
+         |           ^
+      24 |       <RootLayout>
+      25 |         <div data-testid="child">Test Child</div>
+      26 |       </RootLayout>
+
+      at validateDOMNesting (node_modules/react-dom/cjs/react-dom-client.development.js:2598:19)
+      at resolveSingletonInstance (node_modules/react-dom/cjs/react-dom-client.development.js:22598:9)
+      at completeWork (node_modules/react-dom/cjs/react-dom-client.development.js:12525:29)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at completeUnitOfWork (node_modules/react-dom/cjs/react-dom-client.development.js:17777:19)
+      at performUnitOfWork (node_modules/react-dom/cjs/react-dom-client.development.js:17658:11)
+      at workLoopSync (node_modules/react-dom/cjs/react-dom-client.development.js:17469:41)
+      at renderRootSync (node_modules/react-dom/cjs/react-dom-client.development.js:17450:11)
+      at performWorkOnRoot (node_modules/react-dom/cjs/react-dom-client.development.js:16504:11)
+      at performWorkOnRootViaSchedulerTask (node_modules/react-dom/cjs/react-dom-client.development.js:18957:7)
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:189:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:291:10)
+      at Object.<anonymous> (src/app/layout.test.tsx:23:11)
+
+PASS src/components/MemoryLog.test.tsx
+PASS src/components/MintFlow.test.tsx
+PASS src/app/play/page.test.tsx
+PASS src/components/ActionButtons.test.tsx
+PASS src/app/page.test.tsx
+
+Test Suites: 9 failed, 8 passed, 17 total
+Tests:       9 failed, 31 passed, 40 total
+Snapshots:   0 total
+Time:        1.562 s, estimated 2 s
+Ran all test suites.

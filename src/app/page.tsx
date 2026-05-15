@@ -20,7 +20,7 @@ export default function LandingPage() {
             GOCHI
           </h1>
           <p className="font-mono text-lg md:text-xl text-[var(--gochi-muted)] max-w-2xl mx-auto neon-text">
-            The first fully autonomous, on-chain virtual pet powered by 0G Network's Storage and Compute AI.
+            The first fully autonomous, on-chain virtual pet powered by 0G Network&apos;s Storage and Compute AI.
           </p>
         </div>
 

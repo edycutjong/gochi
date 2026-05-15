@@ -48,7 +48,7 @@ export default function MintFlow({ onMint }: { onMint: () => Promise<void> }) {
         <h2 className="font-display text-lg mb-4 text-[var(--gochi-cyan)]">A new life awaits</h2>
         
         <p className="text-[var(--gochi-muted)] text-sm mb-8 font-mono leading-relaxed">
-          Your Gochi will be born as an INFT on the <strong className="text-[var(--gochi-text)]">0G Mainnet</strong>. 
+          Your Gochi will be born as an INFT on the <strong className="text-[var(--gochi-text)]">0G Galileo Testnet</strong>.
           Its memories will be permanently archived on 0G Storage.
         </p>
 

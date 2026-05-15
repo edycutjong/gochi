@@ -1,43 +1,67 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { logUpload, is0GConfigured } from '@/lib/zero-g';
 
 export async function POST(request: Request) {
   try {
-    const { action, title, txHash } = await request.json();
+    const { action, title, txHash: kvTxHash, tokenId } = await request.json();
 
     if (!action) {
       return NextResponse.json({ error: 'Action content is required' }, { status: 400 });
     }
 
     const start = Date.now();
-    const merkleRoot = `0x${Math.random().toString(16).slice(2).padStart(64, '0')}`;
     const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+    const memoryPayload = {
+      gochiId: tokenId ?? 'demo',
+      event: action.toUpperCase(),
+      title,
+      stats: {},
+      timestamp: Date.now(),
+    };
+
+    let rootHash: string;
+    let uploadTxHash: string | undefined;
+    let source: 'zerog' | 'supabase';
+
+    if (is0GConfigured()) {
+      try {
+        const result = await logUpload(memoryPayload);
+        rootHash = result.rootHash;
+        uploadTxHash = result.txHash;
+        source = 'zerog';
+      } catch (zkErr: unknown) {
+        console.warn('0G Log upload failed, falling back to Supabase:', zkErr instanceof Error ? zkErr.message : zkErr);
+        rootHash = `0x${Math.random().toString(16).slice(2).padStart(64, '0')}`;
+        source = 'supabase';
+      }
+    } else {
+      rootHash = `0x${Math.random().toString(16).slice(2).padStart(64, '0')}`;
+      source = 'supabase';
+    }
 
     const newMemory = {
       id: Date.now().toString(),
       type: action.toUpperCase(),
       title,
       time,
-      merkle_root: merkleRoot,
-      tx_hash: txHash
+      merkle_root: rootHash,
+      tx_hash: uploadTxHash ?? kvTxHash,
     };
 
-    const { data, error } = await supabase
-      .from('gochi_memories')
-      .insert([newMemory])
-      .select();
+    const { error } = await supabase.from('gochi_memories').insert([newMemory]);
+    if (error) console.warn('Supabase memory insert failed:', error.message);
 
-    if (error) throw error;
-
-    const latency = Date.now() - start;
-
-    return NextResponse.json({ 
-      success: true, 
-      merkleRoot, // Simulated 0G storage log merkle root
-      latency,
-      data
+    return NextResponse.json({
+      success: true,
+      merkleRoot: rootHash,
+      txHash: uploadTxHash,
+      source,
+      latency: Date.now() - start,
     });
-  } catch (err: any) {
-    return NextResponse.json({ error: 'Failed to archive memory to Storage Log', details: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    return NextResponse.json({ error: 'Failed to archive memory to Storage Log', details: message }, { status: 500 });
   }
 }

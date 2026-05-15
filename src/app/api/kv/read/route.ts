@@ -1,5 +1,8 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
+import { kvRead, is0GConfigured } from '@/lib/zero-g';
+
+const DEFAULT_STATE = { hunger: 80, mood: 90, energy: 70, lastUpdate: 0 };
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -11,32 +14,43 @@ export async function GET(request: Request) {
 
   try {
     const start = Date.now();
-    const { data, error } = await supabase
-      .from('gochi_kv')
-      .select('value')
-      .eq('key', key)
-      .single();
+    let value: unknown = null;
+    let source: 'zerog' | 'supabase';
 
-    if (error && error.code !== 'PGRST116') { // PGRST116 is "No rows found"
-      throw error;
+    if (is0GConfigured()) {
+      try {
+        value = await kvRead(`gochi:${key}`);
+        source = 'zerog';
+      } catch (zkErr: unknown) {
+        console.warn('0G KV read failed, falling back to Supabase:', zkErr instanceof Error ? zkErr.message : zkErr);
+        const { data, error } = await supabase
+          .from('gochi_kv')
+          .select('value')
+          .eq('key', key)
+          .single();
+        if (error && error.code !== 'PGRST116') throw error;
+        value = data?.value ?? null;
+        source = 'supabase';
+      }
+    } else {
+      const { data, error } = await supabase
+        .from('gochi_kv')
+        .select('value')
+        .eq('key', key)
+        .single();
+      if (error && error.code !== 'PGRST116') throw error;
+      value = data?.value ?? null;
+      source = 'supabase';
     }
 
-    const latency = Date.now() - start;
-
-    // Return dummy state if no data found yet
-    const dummyState = {
-      hunger: 80,
-      mood: 90,
-      energy: 70,
-      lastUpdate: Date.now()
-    };
-
-    return NextResponse.json({ 
-      success: true, 
-      value: data?.value || dummyState,
-      latency 
+    return NextResponse.json({
+      success: true,
+      value: value ?? DEFAULT_STATE,
+      source,
+      latency: Date.now() - start,
     });
-  } catch (err: any) {
-    return NextResponse.json({ error: 'Failed to read from KV Storage', details: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : 'Unknown error';
+    return NextResponse.json({ error: 'Failed to read from KV Storage', details: message }, { status: 500 });
   }
 }

@@ -11,6 +11,11 @@ const config: HardhatUserConfig = {
     },
   },
   networks: {
+    "0g-galileo-testnet": {
+      url: "https://evmrpc-testnet.0g.ai",
+      chainId: 16602,
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+    },
     "0g-mainnet": {
       url: "https://evmrpc.0g.ai",
       chainId: 16661,
