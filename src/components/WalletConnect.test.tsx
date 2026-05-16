@@ -127,6 +127,6 @@ describe('WalletConnect', () => {
       render(<WalletConnect />);
     });
 
-    expect(screen.getByText('Connection request pending in wallet...')).toBeInTheDocument();
+    expect(screen.getByText('Wallet request pending...')).toBeInTheDocument();
   });
 });
