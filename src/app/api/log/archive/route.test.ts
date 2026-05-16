@@ -93,7 +93,7 @@ describe('POST /api/log/archive', () => {
     
     const request = new Request('http://localhost', {
       method: 'POST',
-      body: JSON.stringify({ action: 'fed', title: 'Fed Gochi', txHash: '0x123' }),
+      body: JSON.stringify({ action: 'fed', title: 'Fed Gochi', txHash: '0x123', tokenId: 99 }),
     });
 
     const response = await POST(request);

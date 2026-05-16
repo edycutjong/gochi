@@ -46,6 +46,23 @@ describe('GET /api/log/memories', () => {
     expect(data.details).toBe('Unknown error');
   });
 
+  it('should filter memories by tokenId if provided', async () => {
+    const mockLimit = jest.fn().mockResolvedValue({ data: [], error: null });
+    const mockOrder = jest.fn().mockReturnValue({ limit: mockLimit });
+    const mockIs = jest.fn().mockReturnValue({ order: mockOrder });
+    const mockEq = jest.fn().mockReturnValue({ order: mockOrder });
+    const mockSelect = jest.fn().mockReturnValue({ is: mockIs, eq: mockEq, order: mockOrder });
+    (supabase.from as jest.Mock).mockReturnValue({ select: mockSelect });
+
+    const req = new Request('http://localhost?tokenId=99');
+    const response = await GET(req);
+    const data = await response.json();
+
+    expect(response.status).toBe(200);
+    expect(data).toEqual({ memories: [], success: true });
+    expect(mockEq).toHaveBeenCalledWith('token_id', '99');
+  });
+
   it('should successfully fetch memories', async () => {
     const mockMemories = [
       { id: '1', type: 'FEED', title: 'Fed', time: '10:00', merkle_root: '0x1', tx_hash: '0x2' }
