@@ -12,6 +12,7 @@
 
   <br/>
 
+  ![React](https://img.shields.io/badge/React_19-20232A?style=flat&logo=react&logoColor=61DAFB)
   ![Next.js](https://img.shields.io/badge/Next.js_16-black?style=flat&logo=next.js)
   ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
   ![Tailwind](https://img.shields.io/badge/Tailwind_v4-38B2AC?style=flat&logo=tailwindcss&logoColor=white)
@@ -19,7 +20,10 @@
   ![Solidity](https://img.shields.io/badge/Solidity-363636?style=flat&logo=solidity&logoColor=white)
   ![0G Network](https://img.shields.io/badge/0G_Network-8b5cf6?style=flat)
   ![Hardhat](https://img.shields.io/badge/Hardhat-FFF100?style=flat&logo=hardhat&logoColor=black)
+  ![Ethers.js](https://img.shields.io/badge/Ethers.js-2535A0?style=flat)
   ![Wagmi](https://img.shields.io/badge/Wagmi-1E1E2E?style=flat)
+  ![Viem](https://img.shields.io/badge/Viem-1E1E2E?style=flat)
+  ![RainbowKit](https://img.shields.io/badge/RainbowKit-0E76FD?style=flat)
   ![Jest](https://img.shields.io/badge/Jest-C21325?style=flat&logo=jest&logoColor=white)
   [![CI](https://github.com/edycutjong/gochi/actions/workflows/ci.yml/badge.svg)](https://github.com/edycutjong/gochi/actions/workflows/ci.yml)
 
