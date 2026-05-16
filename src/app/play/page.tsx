@@ -9,6 +9,7 @@ import ChatPanel from '@/components/ChatPanel';
 import MemoryLog from '@/components/MemoryLog';
 import LatencyMonitor from '@/components/LatencyMonitor';
 import MintFlow from '@/components/MintFlow';
+import { WalletConnect } from '@/components/WalletConnect';
 
 type Memory = {
   id: string;
@@ -164,9 +165,9 @@ export default function PlayPage() {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-8 text-center font-mono space-y-6 min-h-[50vh]">
         <Plug className="w-14 h-14 animate-pulse text-[var(--gochi-cyan)] opacity-80" />
-        <div className="space-y-2">
+        <div className="space-y-4 flex flex-col items-center">
           <p className="text-[var(--gochi-text)] text-base">Connect your wallet to hatch your Gochi.</p>
-          <p className="text-xs text-[var(--gochi-muted)]">Use the <strong className="text-[var(--gochi-cyan)]">Connect Wallet</strong> button in the top-right corner.</p>
+          <WalletConnect />
         </div>
         <p className="text-[10px] text-[var(--gochi-muted)] opacity-50">Requires 0G Galileo Testnet · Chain ID {REQUIRED_CHAIN_ID}</p>
       </div>
