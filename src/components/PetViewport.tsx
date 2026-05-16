@@ -1,4 +1,4 @@
-'use client';
+import { useState, useEffect } from 'react';
 import { Ghost, Moon, Drumstick, Star } from 'lucide-react';
 
 type Stats = { hunger: number; mood: number; energy: number };
@@ -28,6 +28,18 @@ export default function PetViewport({
     : action === 'feed'  ? 'scale-110'
     : 'animate-breathe';
 
+  const [clickEffect, setClickEffect] = useState({ color: '', active: false });
+
+  const handlePetClick = () => {
+    const colors = ['#fca5a5', '#86efac', '#93c5fd', '#fcd34d', '#d8b4fe', '#06b6d4', '#f472b6'];
+    const randomColor = colors[Math.floor(Math.random() * colors.length)];
+    setClickEffect({ color: randomColor, active: true });
+    setTimeout(() => setClickEffect((prev) => ({ ...prev, active: false })), 400);
+  };
+
+  const displayColor = clickEffect.active ? clickEffect.color : petColor;
+  const displayMotion = clickEffect.active ? 'scale-125 -translate-y-4 rotate-[15deg]' : petMotion;
+
   return (
     <div
       className={`relative w-full aspect-square max-w-[288px] mx-auto bg-[var(--gochi-bg)] border-2 rounded-xl overflow-hidden flex items-center justify-center group transition-all duration-500 ${
@@ -41,8 +53,8 @@ export default function PetViewport({
 
       {/* Mood glow */}
       <div
-        className="absolute inset-0 blur-xl transition-all duration-1000"
-        style={{ background: `radial-gradient(circle at center, ${petColor}28, transparent 70%)` }}
+        className="absolute inset-0 blur-xl transition-all duration-500"
+        style={{ background: `radial-gradient(circle at center, ${displayColor}33, transparent 70%)` }}
       />
 
       {/* Token ID badge */}
@@ -54,8 +66,9 @@ export default function PetViewport({
 
       {/* Pet character */}
       <div
-        className={`relative transition-all duration-300 ${petMotion}`}
-        style={{ color: petColor, filter: `drop-shadow(0 0 15px ${petColor})` }}
+        onClick={handlePetClick}
+        className={`relative transition-all duration-300 cursor-pointer ${displayMotion}`}
+        style={{ color: displayColor, filter: `drop-shadow(0 0 15px ${displayColor})` }}
       >
         <Ghost className="w-32 h-32" strokeWidth={1.5} />
       </div>

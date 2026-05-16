@@ -157,4 +157,39 @@ describe('MintFlow', () => {
 
     expect(screen.getByText('Transaction failed')).toBeInTheDocument();
   });
+
+  it('loads a saved token id via localStorage and allows resuming', () => {
+    localStorage.setItem('gochi_last_token_id', '99');
+    
+    (useWriteContract as jest.Mock).mockReturnValue({ writeContractAsync: jest.fn() });
+    (useWaitForTransactionReceipt as jest.Mock).mockReturnValue({ data: null, isSuccess: false });
+
+    const mockOnMint = jest.fn();
+    render(<MintFlow onMint={mockOnMint} />);
+
+    const resumeBtn = screen.getByRole('button', { name: /RESUME GOCHI #99/i });
+    expect(resumeBtn).toBeInTheDocument();
+
+    fireEvent.click(resumeBtn);
+    expect(mockOnMint).toHaveBeenCalledWith(99);
+
+    localStorage.removeItem('gochi_last_token_id');
+  });
+
+  it('allows user to load token ID from input', () => {
+    (useWriteContract as jest.Mock).mockReturnValue({ writeContractAsync: jest.fn() });
+    (useWaitForTransactionReceipt as jest.Mock).mockReturnValue({ data: null, isSuccess: false });
+
+    const mockOnMint = jest.fn();
+    render(<MintFlow onMint={mockOnMint} />);
+
+    const input = screen.getByPlaceholderText('Token ID');
+    fireEvent.change(input, { target: { value: '42' } });
+
+    const loadBtn = screen.getByRole('button', { name: /LOAD/i });
+    fireEvent.click(loadBtn);
+
+    expect(localStorage.getItem('gochi_last_token_id')).toBe('42');
+    expect(mockOnMint).toHaveBeenCalledWith(42);
+  });
 });

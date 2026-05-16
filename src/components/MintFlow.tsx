@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Egg, Ghost, Sparkles, ExternalLink, CheckCircle2 } from 'lucide-react';
 import { useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { decodeEventLog } from 'viem';
@@ -30,6 +30,66 @@ export default function MintFlow({ onMint }: { onMint: (tokenId?: number) => Pro
   const [mintTxHash, setMintTxHash] = useState<`0x${string}` | undefined>();
   const [mintedTokenId, setMintedTokenId] = useState<number | undefined>();
   const [error, setError] = useState<string | null>(null);
+  const [loadInput, setLoadInput] = useState('');
+  
+  const [savedTokenIds, setSavedTokenIds] = useState<number[]>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('gochi_saved_token_ids');
+        if (saved) return JSON.parse(saved);
+        const oldSaved = localStorage.getItem('gochi_last_token_id');
+        if (oldSaved) return [Number(oldSaved)];
+      } catch (e) {}
+    }
+    return [];
+  });
+  
+  const options = [{ type: 'new' as const }, ...[...savedTokenIds].reverse().map(id => ({ type: 'resume' as const, id }))];
+  const [selectedIndex, setSelectedIndex] = useState(options.length > 1 ? 1 : 0);
+  const sliderRef = useRef<HTMLDivElement>(null);
+
+  const scrollTo = (index: number) => {
+    if (!sliderRef.current) return;
+    const scrollLeft = sliderRef.current.clientWidth * index;
+    sliderRef.current.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+    setSelectedIndex(index);
+  };
+
+  const handleScroll = () => {
+    if (!sliderRef.current) return;
+    const index = Math.round(sliderRef.current.scrollLeft / sliderRef.current.clientWidth);
+    if (index !== selectedIndex) {
+      setSelectedIndex(index);
+    }
+  };
+
+  useEffect(() => {
+    if (stage === 'idle' && sliderRef.current && options.length > 1) {
+      setTimeout(() => scrollTo(1), 50);
+    }
+  }, [stage, options.length]);
+
+  useEffect(() => {
+    if (stage !== 'idle') return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowLeft') {
+        scrollTo(Math.max(0, selectedIndex - 1));
+      } else if (e.key === 'ArrowRight') {
+        scrollTo(Math.min(options.length - 1, selectedIndex + 1));
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [stage, selectedIndex, options.length]);
+  const [eggColor, setEggColor] = useState('');
+  const [eggMotion, setEggMotion] = useState(false);
+
+  const handleEggClick = () => {
+    const colors = ['#fca5a5', '#86efac', '#93c5fd', '#fcd34d', '#d8b4fe', '#06b6d4', '#f472b6'];
+    setEggColor(colors[Math.floor(Math.random() * colors.length)]);
+    setEggMotion(true);
+    setTimeout(() => setEggMotion(false), 500);
+  };
 
   const { writeContractAsync } = useWriteContract();
   const { data: receipt, isSuccess: txConfirmed } = useWaitForTransactionReceipt({ hash: mintTxHash });
@@ -52,6 +112,15 @@ export default function MintFlow({ onMint }: { onMint: (tokenId?: number) => Pro
 
     setTimeout(() => {
       setMintedTokenId(parsedTokenId);
+      if (parsedTokenId !== undefined) {
+        setSavedTokenIds(prev => {
+          const next = prev.filter(x => x !== parsedTokenId);
+          next.push(parsedTokenId!);
+          localStorage.setItem('gochi_saved_token_ids', JSON.stringify(next));
+          localStorage.setItem('gochi_last_token_id', parsedTokenId!.toString());
+          return next;
+        });
+      }
       setStage('hatching');
     }, 0);
 
@@ -97,7 +166,12 @@ export default function MintFlow({ onMint }: { onMint: (tokenId?: number) => Pro
         <div className="absolute inset-0 bg-radial from-[var(--gochi-cyan)]/30 to-transparent blur-2xl animate-pulse" />
         <div className="relative z-10 flex items-center justify-center">
           {stage === 'idle' && (
-            <Egg className="w-32 h-32 text-[var(--gochi-text)] animate-breathe" strokeWidth={1.5} />
+            <Egg 
+              onClick={handleEggClick}
+              className={`w-32 h-32 cursor-pointer transition-all duration-300 ${eggMotion ? 'scale-125 -rotate-12 drop-shadow-2xl' : 'animate-breathe scale-100'}`} 
+              style={{ color: eggColor || 'var(--gochi-text)', filter: eggColor ? `drop-shadow(0 0 25px ${eggColor})` : 'none' }}
+              strokeWidth={1.5} 
+            />
           )}
           {stage === 'minting' && (
             <div className="relative">
@@ -125,24 +199,116 @@ export default function MintFlow({ onMint }: { onMint: (tokenId?: number) => Pro
 
         {/* ── IDLE state ── */}
         {stage === 'idle' && (
-          <>
-            <h2 className="font-display text-lg mb-4 text-[var(--gochi-cyan)]">A new life awaits</h2>
-            <p className="text-[var(--gochi-muted)] text-sm mb-6 font-mono leading-relaxed">
-              Your Gochi will be born as an INFT on the{' '}
-              <strong className="text-[var(--gochi-text)]">0G Galileo Testnet</strong>.
-              Its memories will be permanently archived on 0G Storage.
-            </p>
-            {error && <p className="text-red-400 text-xs font-mono mb-4 break-all">{error}</p>}
-            <button
-              onClick={handleMint}
-              className="w-full py-4 bg-gradient-to-r from-[var(--gochi-cyan)] to-[var(--gochi-purple)] text-white font-display text-xs rounded-lg hover:opacity-90 transition-opacity active:scale-[0.98] flex items-center justify-center gap-3 relative z-10"
+          <div className="flex flex-col -mx-8 -my-8 h-full">
+            <div 
+              ref={sliderRef}
+              className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide flex-1"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              onScroll={handleScroll}
             >
-              MINT YOUR GOCHI
-            </button>
-            <div className="mt-4 text-xs font-mono text-[var(--gochi-muted)]">
-              {displayAddress ? `Contract: ${displayAddress.slice(0, 10)}…` : 'Est. Cost: ~0.01 A0GI (gas)'}
+              {options.map((opt, i) => (
+                <div key={i} className="w-full flex-shrink-0 snap-center p-8 flex flex-col justify-center">
+                  {opt.type === 'new' ? (
+                    <>
+                      <h2 className="font-display text-lg mb-4 text-[var(--gochi-cyan)] text-center">A new life awaits</h2>
+                      <p className="text-[var(--gochi-muted)] text-sm mb-6 font-mono leading-relaxed text-center">
+                        Your Gochi will be born as an INFT on the{' '}
+                        <strong className="text-[var(--gochi-text)]">0G Galileo Testnet</strong>.
+                        Its memories will be permanently archived on 0G Storage.
+                      </p>
+                      {error && <p className="text-red-400 text-xs font-mono mb-4 break-all text-center">{error}</p>}
+                      <button
+                        onClick={handleMint}
+                        className="w-full py-4 bg-gradient-to-r from-[var(--gochi-cyan)] to-[var(--gochi-purple)] text-white font-display text-xs rounded-lg hover:opacity-90 transition-opacity active:scale-[0.98] flex items-center justify-center gap-3 relative z-10"
+                      >
+                        MINT YOUR GOCHI
+                      </button>
+                      <div className="mt-4 text-xs font-mono text-[var(--gochi-muted)] text-center">
+                        {displayAddress ? `Contract: 0x${displayAddress.replace(/^0x/i, '').slice(0, 4)}...${displayAddress.slice(-4)}` : 'Est. Cost: ~0.01 A0GI (gas)'}
+                      </div>
+
+                      <div className="mt-6 pt-6 border-t border-[var(--gochi-border)] flex flex-col gap-3">
+                        <div className="text-xs text-[var(--gochi-muted)] font-mono text-left">Have an existing Gochi? Enter its Token ID:</div>
+                        <div className="flex gap-2">
+                          <input
+                            type="number"
+                            placeholder="Token ID"
+                            value={loadInput}
+                            onChange={(e) => setLoadInput(e.target.value)}
+                            className="flex-1 bg-[var(--gochi-background)] border border-[var(--gochi-border)] rounded-lg px-3 py-2 text-[var(--gochi-text)] text-sm font-mono focus:outline-none focus:border-[var(--gochi-cyan)]"
+                          />
+                          <button
+                            onClick={() => {
+                              const id = parseInt(loadInput);
+                              if (!isNaN(id)) {
+                                setSavedTokenIds(prev => {
+                                  const next = prev.filter(x => x !== id);
+                                  next.push(id);
+                                  localStorage.setItem('gochi_saved_token_ids', JSON.stringify(next));
+                                  localStorage.setItem('gochi_last_token_id', id.toString());
+                                  return next;
+                                });
+                                onMint(id);
+                              }
+                            }}
+                            disabled={!loadInput}
+                            className="px-4 bg-[var(--gochi-panel)] border border-[var(--gochi-border)] text-[var(--gochi-text)] text-xs font-display rounded-lg hover:bg-[var(--gochi-border)] disabled:opacity-50 transition-colors"
+                          >
+                            LOAD
+                          </button>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <h2 className="font-display text-lg mb-4 text-[var(--gochi-cyan)] text-center">Resume Life</h2>
+                      <div className="flex-1 flex flex-col items-center justify-center mb-6">
+                        <Ghost className="w-16 h-16 text-[var(--gochi-cyan)] animate-pulse mb-4" strokeWidth={1.5} />
+                        <p className="text-[var(--gochi-muted)] text-sm font-mono leading-relaxed text-center">
+                          Awaken Gochi <strong className="text-[var(--gochi-amber)]">#{opt.id}</strong> from 0G Storage.
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => onMint(opt.id)}
+                        className="w-full py-4 bg-[var(--gochi-panel)] border border-[var(--gochi-cyan)]/30 text-[var(--gochi-cyan)] font-display text-xs rounded-lg hover:bg-[var(--gochi-cyan)]/10 transition-colors flex items-center justify-center gap-2"
+                      >
+                        RESUME GOCHI #{opt.id}
+                      </button>
+                    </>
+                  )}
+                </div>
+              ))}
             </div>
-          </>
+            
+            {/* Arrows & Dots */}
+            {options.length > 1 && (
+              <div className="flex justify-between items-center px-4 py-4 bg-[var(--gochi-panel)] border-t border-[var(--gochi-border)] z-10">
+                <button 
+                  onClick={() => scrollTo(Math.max(0, selectedIndex - 1))}
+                  disabled={selectedIndex === 0}
+                  className="p-1 rounded hover:bg-[var(--gochi-border)] disabled:opacity-30 transition-colors text-[var(--gochi-cyan)]"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                </button>
+                <div className="flex gap-2">
+                  {options.map((_, i) => (
+                    <button 
+                      key={i} 
+                      onClick={() => scrollTo(i)}
+                      className={`w-2 h-2 rounded-full transition-colors ${i === selectedIndex ? 'bg-[var(--gochi-cyan)]' : 'bg-[var(--gochi-border)] hover:bg-[var(--gochi-cyan)]/50'}`} 
+                    />
+                  ))}
+                </div>
+                <button 
+                  onClick={() => scrollTo(Math.min(options.length - 1, selectedIndex + 1))}
+                  disabled={selectedIndex === options.length - 1}
+                  className="p-1 rounded hover:bg-[var(--gochi-border)] disabled:opacity-30 transition-colors text-[var(--gochi-cyan)]"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                </button>
+              </div>
+            )}
+          </div>
         )}
 
         {/* ── MINTING state ── */}
