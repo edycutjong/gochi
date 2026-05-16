@@ -1,4 +1,5 @@
 'use client';
+import { useRef } from 'react';
 import { Brain, Database } from 'lucide-react';
 
 type Memory = {
@@ -11,6 +12,19 @@ type Memory = {
 };
 
 export default function MemoryLog({ memories }: { memories: Memory[] }) {
+  const initialMemoriesRef = useRef<Set<string> | null>(null);
+
+  // Capture the first non-empty batch of memories as the 'initial' load
+  if (initialMemoriesRef.current === null && memories.length > 0) {
+    initialMemoriesRef.current = new Set(memories.map(m => m.id));
+  }
+
+  const isNew = (id: string) => {
+    // If we haven't locked in an initial load yet, don't animate anything
+    if (!initialMemoriesRef.current) return false;
+    return !initialMemoriesRef.current.has(id);
+  };
+
   const getTypeStyle = (type: string) => {
     switch (type) {
       case 'FEED':  return 'bg-red-500/20 text-red-400 border-red-500/30';
@@ -48,7 +62,7 @@ export default function MemoryLog({ memories }: { memories: Memory[] }) {
           memories.map((mem, i) => (
             <div
               key={mem.id}
-              className={`relative p-3 rounded-lg border bg-[var(--gochi-bg)] transition-all animate-slide-in-left ${
+              className={`relative p-3 rounded-lg border bg-[var(--gochi-bg)] transition-all ${isNew(mem.id) ? 'animate-slide-in-left' : ''} ${
                 i === 0
                   ? 'border-[var(--gochi-cyan)]/60 shadow-[0_0_10px_rgba(6,182,212,0.15)]'
                   : 'border-[var(--gochi-border)] opacity-75'

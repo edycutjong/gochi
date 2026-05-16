@@ -20,6 +20,7 @@ export default function ChatPanel({
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -67,7 +68,10 @@ export default function ChatPanel({
         <span className="text-[var(--gochi-purple)]">Powered by 0G Compute</span>
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0">
+      <div 
+        className="flex-1 overflow-y-auto p-4 space-y-4 min-h-0 cursor-text"
+        onClick={() => inputRef.current?.focus()}
+      >
         {messages.map((msg) => (
           <div key={msg.id} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
             <div
@@ -112,6 +116,7 @@ export default function ChatPanel({
           )}
         </span>
         <input
+          ref={inputRef}
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
