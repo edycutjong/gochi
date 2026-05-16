@@ -108,7 +108,7 @@ export default function LandingPage() {
         </div>
 
         {/* Bottom CTA */}
-        <div className="pt-4 pb-8 flex flex-col items-center gap-3">
+        <div className="pt-4 flex flex-col items-center gap-3">
           <p className="font-mono text-xs text-[var(--gochi-muted)]">
             When the servers go dark — Gochi stays.
           </p>
@@ -120,6 +120,56 @@ export default function LandingPage() {
             <span className="group-hover:translate-x-1 transition-transform inline-block">→</span>
           </Link>
         </div>
+
+        {/* Sponsor / Built-on strip */}
+        <div className="w-full border-t border-[var(--gochi-border)] pt-8 pb-10 flex flex-col items-center gap-6">
+          <p className="font-mono text-[10px] text-[var(--gochi-muted)] tracking-widest uppercase">Powered by</p>
+          <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10">
+            {/* 0G Network */}
+            <a
+              href="https://0g.ai"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2 rounded border border-[var(--gochi-border)] bg-[var(--gochi-panel)] hover:border-[var(--gochi-cyan)]/40 transition-colors group"
+            >
+              <span className="w-2 h-2 rounded-full bg-[var(--gochi-cyan)] group-hover:shadow-[0_0_8px_rgba(6,182,212,0.8)] transition-shadow"></span>
+              <span className="font-mono text-xs text-[var(--gochi-text)] group-hover:text-[var(--gochi-cyan)] transition-colors">0G Network</span>
+            </a>
+            {/* HackQuest */}
+            <a
+              href="https://www.hackquest.io/hackathons/0G-APAC-Hackathon"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2 rounded border border-[var(--gochi-border)] bg-[var(--gochi-panel)] hover:border-[var(--gochi-purple)]/40 transition-colors group"
+            >
+              <span className="w-2 h-2 rounded-full bg-[var(--gochi-purple)] group-hover:shadow-[0_0_8px_rgba(168,85,247,0.8)] transition-shadow"></span>
+              <span className="font-mono text-xs text-[var(--gochi-text)] group-hover:text-[var(--gochi-purple)] transition-colors">HackQuest APAC 2026</span>
+            </a>
+            {/* Vercel */}
+            <a
+              href="https://vercel.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2 rounded border border-[var(--gochi-border)] bg-[var(--gochi-panel)] hover:border-white/20 transition-colors group"
+            >
+              <span className="font-mono text-xs text-[var(--gochi-muted)] group-hover:text-white transition-colors">▲ Vercel</span>
+            </a>
+            {/* Supabase */}
+            <a
+              href="https://supabase.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2 rounded border border-[var(--gochi-border)] bg-[var(--gochi-panel)] hover:border-[var(--gochi-green)]/40 transition-colors group"
+            >
+              <span className="w-2 h-2 rounded-full bg-[var(--gochi-green)] group-hover:shadow-[0_0_8px_rgba(34,197,94,0.8)] transition-shadow"></span>
+              <span className="font-mono text-xs text-[var(--gochi-text)] group-hover:text-[var(--gochi-green)] transition-colors">Supabase</span>
+            </a>
+          </div>
+          <p className="font-mono text-[9px] text-[var(--gochi-muted)]/50">
+            0G APAC Hackathon 2026 · Submission by Edy Cu · MIT License
+          </p>
+        </div>
+
       </div>
     </div>
   );
