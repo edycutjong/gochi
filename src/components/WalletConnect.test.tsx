@@ -34,6 +34,32 @@ describe('WalletConnect', () => {
     expect(mockConnect).toHaveBeenCalledWith({ connector: { id: 'metaMask', name: 'MetaMask' } });
   });
 
+  it('deduplicates injected connector if metaMask is present', async () => {
+    (useAccount as jest.Mock).mockReturnValue({
+      address: undefined,
+      isConnected: false,
+    });
+    
+    (useConnect as jest.Mock).mockReturnValue({
+      connect: jest.fn(),
+      connectors: [
+        { id: 'metaMask', name: 'MetaMask' },
+        { id: 'injected', name: 'Injected' },
+        { id: 'walletConnect', name: 'WalletConnect' }
+      ],
+      error: null,
+    });
+
+    await act(async () => {
+      render(<WalletConnect />);
+    });
+
+    fireEvent.click(screen.getByText('Connect Wallet'));
+    expect(screen.getByText('MetaMask')).toBeInTheDocument();
+    expect(screen.getByText('WalletConnect')).toBeInTheDocument();
+    expect(screen.queryByText('Injected')).not.toBeInTheDocument();
+  });
+
   it('renders disconnect button when connected', async () => {
     (useAccount as jest.Mock).mockReturnValue({
       address: '0x1234567890abcdef1234567890abcdef12345678',
@@ -130,5 +156,39 @@ describe('WalletConnect', () => {
     });
 
     expect(screen.getByText('Open your wallet extension')).toBeInTheDocument();
+  });
+
+  it('closes dropdown when clicking outside', async () => {
+    (useAccount as jest.Mock).mockReturnValue({
+      address: undefined,
+      isConnected: false,
+    });
+    
+    (useConnect as jest.Mock).mockReturnValue({
+      connect: jest.fn(),
+      connectors: [{ id: 'metaMask', name: 'MetaMask' }],
+      error: null,
+    });
+
+    await act(async () => {
+      render(
+        <div>
+          <div data-testid="outside">Outside</div>
+          <WalletConnect />
+        </div>
+      );
+    });
+
+    const connectButton = screen.getByText('Connect Wallet');
+    
+    await act(async () => {
+      fireEvent.click(connectButton);
+    });
+    expect(screen.getByText('MetaMask')).toBeInTheDocument();
+
+    await act(async () => {
+      fireEvent.mouseDown(screen.getByTestId('outside'));
+    });
+    expect(screen.queryByText('MetaMask')).not.toBeInTheDocument();
   });
 });

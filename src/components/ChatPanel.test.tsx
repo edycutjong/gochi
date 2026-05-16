@@ -64,8 +64,8 @@ describe('ChatPanel', () => {
   });
 
   it('handles API errors gracefully', async () => {
-    // Console error is expected here
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    // Console warning is expected here
+    jest.spyOn(console, 'warn').mockImplementation(() => {});
     fetchSpy.mockRejectedValue(new Error('Network error'));
 
     render(<ChatPanel state={mockState} />);
@@ -105,5 +105,15 @@ describe('ChatPanel', () => {
     fireEvent.submit(form!);
 
     expect(fetchSpy).toHaveBeenCalledTimes(1); // Should still be 1
+  });
+
+  it('focuses input when clicking the chat container', () => {
+    const { container } = render(<ChatPanel state={mockState} />);
+    const input = screen.getByPlaceholderText('Talk to your Gochi...');
+    const chatContainer = container.querySelector('.overflow-y-auto');
+    
+    expect(document.activeElement).not.toBe(input);
+    fireEvent.click(chatContainer!);
+    expect(document.activeElement).toBe(input);
   });
 });
