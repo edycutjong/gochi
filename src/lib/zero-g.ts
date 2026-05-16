@@ -1,3 +1,4 @@
+import 'server-only';
 import { Indexer, KvClient, MemData, Batcher, getFlowContract } from '@0gfoundation/0g-storage-ts-sdk';
 import { ethers } from 'ethers';
 

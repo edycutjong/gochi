@@ -58,6 +58,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
+      persisted: !error,
       merkleRoot: rootHash,
       txHash: uploadTxHash,
       source,
