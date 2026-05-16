@@ -7,6 +7,7 @@ import { decodeEventLog } from 'viem';
 jest.mock('wagmi', () => ({
   useWriteContract: jest.fn(),
   useWaitForTransactionReceipt: jest.fn(),
+  useSwitchChain: jest.fn(),
 }));
 
 jest.mock('viem', () => ({
@@ -20,12 +21,15 @@ describe('MintFlow', () => {
     jest.useFakeTimers();
     process.env = { ...ORIGINAL_ENV };
     process.env.NEXT_PUBLIC_CONTRACT_ADDRESS = ''; // Default for old tests
+    const { useSwitchChain } = require('wagmi');
+    useSwitchChain.mockReturnValue({ switchChainAsync: jest.fn().mockResolvedValue(undefined) });
   });
 
   afterEach(() => {
     jest.useRealTimers();
     process.env = ORIGINAL_ENV;
     jest.clearAllMocks();
+    localStorage.clear();
   });
 
   it('renders correctly in idle state', async () => {
@@ -52,7 +56,9 @@ describe('MintFlow', () => {
 
     // Advance 2s for hatching state
     await act(async () => {
+      await Promise.resolve(); // flush microtasks for switchChainAsync
       jest.advanceTimersByTime(2000);
+      await Promise.resolve(); // flush microtasks for setTimeout resolve
     });
     
     expect(screen.getByText('BORN ON 0G CHAIN')).toBeInTheDocument();
@@ -60,6 +66,7 @@ describe('MintFlow', () => {
     // Advance 3s for onMint resolution
     await act(async () => {
       jest.advanceTimersByTime(3000);
+      await Promise.resolve();
     });
 
     expect(mockOnMint).toHaveBeenCalledWith(undefined);
@@ -83,6 +90,10 @@ describe('MintFlow', () => {
 
     const button = screen.getByRole('button', { name: /MINT YOUR GOCHI/i });
     fireEvent.click(button);
+
+    await act(async () => {
+      await Promise.resolve();
+    });
 
     // It should call writeContractAsync
     expect(writeContractAsyncMock).toHaveBeenCalled();
@@ -167,7 +178,7 @@ describe('MintFlow', () => {
     const mockOnMint = jest.fn();
     render(<MintFlow onMint={mockOnMint} />);
 
-    const resumeBtn = screen.getByRole('button', { name: /RESUME GOCHI #99/i });
+    const resumeBtn = screen.getByRole('button', { name: /Gochi #99/i });
     expect(resumeBtn).toBeInTheDocument();
 
     fireEvent.click(resumeBtn);
