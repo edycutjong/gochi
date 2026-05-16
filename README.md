@@ -7,6 +7,7 @@
 
   [![Live Demo](https://img.shields.io/badge/🚀_Live-Demo-06b6d4?style=for-the-badge)](https://gochi.edycu.dev)
   [![Pitch Video](https://img.shields.io/badge/🎬_Pitch-Video-ef4444?style=for-the-badge)](https://youtu.be/your-video)
+  [![Pitch Deck](https://img.shields.io/badge/📊_Pitch-Deck-f59e0b?style=for-the-badge)](https://your-pitch-deck-url)
   [![Built for HackQuest](https://img.shields.io/badge/HackQuest-0G_APAC_2026-8b5cf6?style=for-the-badge)](https://hackquest.io)
 
   <br/>
