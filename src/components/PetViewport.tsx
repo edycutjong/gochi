@@ -40,9 +40,14 @@ export default function PetViewport({
   const displayColor = clickEffect.active ? clickEffect.color : petColor;
   const displayMotion = clickEffect.active ? 'scale-125 -translate-y-4 rotate-[15deg]' : petMotion;
 
+  const handleViewportClick = () => {
+    document.getElementById('chat-input')?.focus();
+  };
+
   return (
     <div
-      className={`relative w-full aspect-square max-w-[288px] mx-auto bg-[var(--gochi-bg)] border-2 rounded-xl overflow-hidden flex items-center justify-center group transition-all duration-500 ${
+      onClick={handleViewportClick}
+      className={`relative w-full aspect-square max-w-[288px] mx-auto bg-[var(--gochi-bg)] border-2 rounded-xl overflow-hidden flex items-center justify-center group transition-all duration-500 cursor-pointer ${
         isCritical
           ? 'border-[var(--gochi-red)] shadow-[0_0_20px_rgba(239,68,68,0.35)]'
           : 'border-[var(--gochi-border)] shadow-[0_0_20px_rgba(6,182,212,0.15)]'

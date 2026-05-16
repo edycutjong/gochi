@@ -116,6 +116,7 @@ export default function ChatPanel({
           )}
         </span>
         <input
+          id="chat-input"
           ref={inputRef}
           type="text"
           value={input}
