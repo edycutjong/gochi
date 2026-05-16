@@ -404,4 +404,38 @@ describe('PlayPage', () => {
       body: expect.stringContaining('"key":"gochi_state"')
     }));
   });
+
+  it('resets state on disconnect', async () => {
+    (useAccount as jest.Mock).mockReturnValue({ isConnected: true });
+    (useChainId as jest.Mock).mockReturnValue(16602);
+    
+    (global.fetch as jest.Mock)
+      .mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ value: null })
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: jest.fn().mockResolvedValue({ memories: [] })
+      });
+
+    const { rerender } = render(<PlayPage />);
+    
+    await act(async () => {
+      fireEvent.click(screen.getByTestId('mint-button'));
+    });
+
+    expect(screen.getByTestId('pet-viewport')).toBeInTheDocument();
+
+    // Now disconnect
+    (useAccount as jest.Mock).mockReturnValue({ isConnected: false });
+    rerender(<PlayPage />);
+
+    // Advance timer to trigger setTimeout
+    await act(async () => {
+      jest.advanceTimersByTime(0);
+    });
+
+    expect(screen.getByText('Connect your wallet to hatch your Gochi.')).toBeInTheDocument();
+  });
 });
