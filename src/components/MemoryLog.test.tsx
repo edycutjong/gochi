@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import MemoryLog from './MemoryLog';
 
 describe('MemoryLog', () => {
@@ -31,5 +31,29 @@ describe('MemoryLog', () => {
     const links = screen.getAllByRole('link');
     expect(links).toHaveLength(4);
     expect(links[0]).toHaveAttribute('href', 'https://storagescan.0g.ai');
+  });
+
+  it('highlights new memories', async () => {
+    jest.useFakeTimers();
+    
+    const { rerender } = render(
+      <MemoryLog memories={[{ id: '1', type: 'FEED', title: 'Fed Apple', time: '12:00 PM', merkleRoot: '', txHash: '' }]} />
+    );
+    
+    act(() => {
+      jest.runAllTimers();
+    });
+
+    rerender(
+      <MemoryLog memories={[
+        { id: '2', type: 'PLAY', title: 'Played ball', time: '12:15 PM', merkleRoot: '', txHash: '' },
+        { id: '1', type: 'FEED', title: 'Fed Apple', time: '12:00 PM', merkleRoot: '', txHash: '' },
+      ]} />
+    );
+
+    const newMemory = screen.getByText('Played ball').closest('div.animate-slide-in-left');
+    expect(newMemory).toBeInTheDocument();
+
+    jest.useRealTimers();
   });
 });
