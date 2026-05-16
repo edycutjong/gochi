@@ -54,6 +54,18 @@ export default function PlayPage() {
     ai: number | null;
   }>({ kvRead: null, kvWrite: null, log: null, ai: null });
 
+  // Reset state on disconnect to avoid leaking state to a different wallet
+  useEffect(() => {
+    if (!isConnected) {
+      setIsMinted(false);
+      setTokenId(undefined);
+      setStats({ hunger: 70, mood: 80, energy: 60, lastUpdate: Date.now() });
+      setMemories([]);
+      setLatencies({ kvRead: null, kvWrite: null, log: null, ai: null });
+      setAction('idle');
+    }
+  }, [isConnected]);
+
   // Load state + memories from server after mint
   useEffect(() => {
     if (!isMinted || !isConnected) return;
@@ -189,14 +201,14 @@ export default function PlayPage() {
   }
 
   return (
-    <div className="relative">
+    <div className="relative flex flex-col overflow-hidden" style={{ height: 'calc(100vh - 4rem)' }}>
       {/* Ambient background */}
       <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 cyber-grid opacity-[0.08]" />
         <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-[var(--gochi-cyan)] opacity-[0.04] blur-[120px] rounded-full" />
         <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-[var(--gochi-purple)] opacity-[0.03] blur-[100px] rounded-full" />
       </div>
-    <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto lg:h-[calc(100vh-5rem)] grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0">
+    <div className="flex-1 min-h-0 p-4 md:p-6 lg:p-8 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 overflow-hidden">
       {/* Left Column: Pet & Actions */}
       <div className="lg:col-span-4 flex flex-col gap-6 min-h-0">
         <PetViewport action={action} stats={stats} tokenId={tokenId} />
@@ -223,7 +235,7 @@ export default function PlayPage() {
     </div>
 
       {/* 0G tech stack strip */}
-      <div className="flex items-center justify-center gap-4 py-3 border-t border-[var(--gochi-border)] bg-[var(--gochi-panel)]/40 flex-wrap">
+      <div className="flex-none flex items-center justify-center gap-4 py-2 border-t border-[var(--gochi-border)] bg-[var(--gochi-panel)]/40 flex-wrap">
         {[
           { label: '0G Chain', sub: 'INFT', color: 'var(--gochi-purple)' },
           { label: '0G KV Store', sub: 'State', color: 'var(--gochi-cyan)' },
