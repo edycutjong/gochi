@@ -182,8 +182,8 @@ describe('MintFlow', () => {
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     process.env.NEXT_PUBLIC_CONTRACT_ADDRESS = '0x123';
     
-    const err = new Error('Full error message');
-    (err as any).shortMessage = 'Short error message';
+    const err = new Error('Full error message') as Error & { shortMessage?: string };
+    err.shortMessage = 'Short error message';
     const writeContractAsyncMock = jest.fn().mockRejectedValue(err);
     (useWriteContract as jest.Mock).mockReturnValue({ writeContractAsync: writeContractAsyncMock });
     (useWaitForTransactionReceipt as jest.Mock).mockReturnValue({ data: null, isSuccess: false });
@@ -198,6 +198,7 @@ describe('MintFlow', () => {
     });
 
     expect(screen.getByText('Short error message')).toBeInTheDocument();
+    expect(screen.getByText('MINT YOUR GOCHI')).toBeInTheDocument(); // button resets
     consoleSpy.mockRestore();
   });
 
@@ -205,7 +206,7 @@ describe('MintFlow', () => {
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     process.env.NEXT_PUBLIC_CONTRACT_ADDRESS = '0x123';
     
-    const err = new Error('Some error Docs: https://viem.sh/docs/error');
+    const err = new Error('Reverted error\nDocs: https://viem.sh/errors/404');
     const writeContractAsyncMock = jest.fn().mockRejectedValue(err);
     (useWriteContract as jest.Mock).mockReturnValue({ writeContractAsync: writeContractAsyncMock });
     (useWaitForTransactionReceipt as jest.Mock).mockReturnValue({ data: null, isSuccess: false });
@@ -219,9 +220,10 @@ describe('MintFlow', () => {
       // flush microtasks
     });
 
-    expect(screen.getByText('Some error Docs: https://viem.sh/docs/error')).toBeInTheDocument();
-    const docLink = screen.getByRole('link', { name: /Docs/i });
-    expect(docLink).toHaveAttribute('href', 'https://viem.sh/docs/error');
+    const docLink = screen.getByText('Docs');
+    expect(docLink).toBeInTheDocument();
+    expect(docLink).toHaveAttribute('href', 'https://viem.sh/errors/404');
+    
     consoleSpy.mockRestore();
   });
 
@@ -229,42 +231,43 @@ describe('MintFlow', () => {
     const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
     process.env.NEXT_PUBLIC_CONTRACT_ADDRESS = '0x123';
     
-    const writeContractAsyncMock = jest.fn().mockRejectedValue('String Error');
+    const writeContractAsyncMock = jest.fn().mockRejectedValue('String error, not an Error object');
     (useWriteContract as jest.Mock).mockReturnValue({ writeContractAsync: writeContractAsyncMock });
     (useWaitForTransactionReceipt as jest.Mock).mockReturnValue({ data: null, isSuccess: false });
 
     const mockOnMint = jest.fn().mockResolvedValue(undefined);
     render(<MintFlow onMint={mockOnMint} />);
 
-    const button = screen.getByRole('button', { name: /MINT YOUR GOCHI/i });
-    fireEvent.click(button);
+    fireEvent.click(screen.getByRole('button', { name: /MINT YOUR GOCHI/i }));
 
     await act(async () => {
       // flush microtasks
     });
 
     expect(screen.getByText('Transaction failed')).toBeInTheDocument();
+    
     consoleSpy.mockRestore();
   });
 
-  it('handles clicking the egg in idle state to trigger animation', async () => {
+  it('handles clicking the egg in idle state to trigger animation', () => {
     (useWriteContract as jest.Mock).mockReturnValue({ writeContractAsync: jest.fn() });
     (useWaitForTransactionReceipt as jest.Mock).mockReturnValue({ data: null, isSuccess: false });
 
-    const mockOnMint = jest.fn().mockResolvedValue(undefined);
-    const { container } = render(<MintFlow onMint={mockOnMint} />);
+    const { container } = render(<MintFlow onMint={jest.fn()} />);
 
-    const eggIcon = container.querySelector('.lucide-egg');
-    expect(eggIcon).toBeInTheDocument();
+    // In 'idle', we have an egg-like shape
+    const eggIcon = container.querySelector('.lucide-egg') as HTMLElement;
     
-    // Click the egg
-    fireEvent.click(eggIcon!);
+    expect(eggIcon).toHaveClass('animate-breathe');
     
-    // Check if it has the animation class 'scale-125'
+    fireEvent.click(eggIcon);
+    
+    // Should change animation momentarily
     expect(eggIcon).toHaveClass('scale-125');
+    expect(eggIcon).toHaveClass('-rotate-12');
     
-    // Wait for the timeout that clears the animation
-    await act(async () => {
+    // Fast forward timer to reset animation
+    act(() => {
       jest.advanceTimersByTime(500);
     });
     
@@ -283,7 +286,7 @@ describe('MintFlow', () => {
     render(<MintFlow onMint={mockOnMint} />);
 
     // By default selectedIndex is 1 when there are multiple options (New + Resume)
-    const newMintButton = screen.getByRole('button', { name: /MINT YOUR GOCHI/i });
+    expect(screen.getByRole('button', { name: /MINT YOUR GOCHI/i })).toBeInTheDocument();
     const resumeButton = screen.getByRole('button', { name: /Gochi #99.*AWAKEN/i });
 
     expect(resumeButton).toBeInTheDocument();
