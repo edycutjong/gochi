@@ -63,7 +63,13 @@ export function WalletConnect() {
           Connect Wallet
         </button>
       )}
-      {error && <div className="text-red-500 text-xs font-mono">{error.message}</div>}
+      {error && (
+        <div className="text-[var(--gochi-amber)] text-[10px] font-mono animate-pulse">
+          {error.message.includes('already pending') 
+            ? 'Connection request pending in wallet...'
+            : error.message}
+        </div>
+      )}
     </div>
   );
 }

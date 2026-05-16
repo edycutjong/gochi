@@ -111,4 +111,22 @@ describe('WalletConnect', () => {
     fireEvent.click(connectButton);
     expect(mockConnect).toHaveBeenCalledWith({ connector: { id: 'someWallet', name: 'Some Wallet' } });
   });
+  it('displays user-friendly message when wallet request is already pending', async () => {
+    (useAccount as jest.Mock).mockReturnValue({
+      address: undefined,
+      isConnected: false,
+    });
+    
+    (useConnect as jest.Mock).mockReturnValue({
+      connect: jest.fn(),
+      connectors: [{ id: 'metaMask', name: 'MetaMask' }],
+      error: { message: "Request of type 'wallet_requestPermissions' already pending for origin http://localhost:3000. Please wait." },
+    });
+
+    await act(async () => {
+      render(<WalletConnect />);
+    });
+
+    expect(screen.getByText('Connection request pending in wallet...')).toBeInTheDocument();
+  });
 });
