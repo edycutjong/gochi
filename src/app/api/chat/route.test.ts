@@ -65,6 +65,7 @@ describe('POST /api/chat', () => {
       ok: false,
       status: 402,
       headers: { get: () => null },
+      json: async () => ({ error: { message: "Payment needed" } }),
     });
 
     const request = new Request('http://localhost', {
@@ -88,6 +89,7 @@ describe('POST /api/chat', () => {
       ok: false,
       status: 500,
       headers: { get: () => null },
+      json: async () => ({}),
     });
 
     const request = new Request('http://localhost', {

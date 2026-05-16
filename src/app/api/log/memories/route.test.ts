@@ -15,10 +15,13 @@ describe('GET /api/log/memories', () => {
   it('should return 500 if supabase error occurs', async () => {
     const mockLimit = jest.fn().mockResolvedValue({ data: null, error: new Error('DB error') });
     const mockOrder = jest.fn().mockReturnValue({ limit: mockLimit });
-    const mockSelect = jest.fn().mockReturnValue({ order: mockOrder });
+    const mockIs = jest.fn().mockReturnValue({ order: mockOrder });
+    const mockEq = jest.fn().mockReturnValue({ order: mockOrder });
+    const mockSelect = jest.fn().mockReturnValue({ is: mockIs, eq: mockEq, order: mockOrder });
     (supabase.from as jest.Mock).mockReturnValue({ select: mockSelect });
 
-    const response = await GET();
+    const req = new Request('http://localhost');
+    const response = await GET(req);
     const data = await response.json();
 
     expect(response.status).toBe(500);
@@ -29,10 +32,13 @@ describe('GET /api/log/memories', () => {
   it('should return 500 if non-Error is thrown', async () => {
     const mockLimit = jest.fn().mockRejectedValue('String error');
     const mockOrder = jest.fn().mockReturnValue({ limit: mockLimit });
-    const mockSelect = jest.fn().mockReturnValue({ order: mockOrder });
+    const mockIs = jest.fn().mockReturnValue({ order: mockOrder });
+    const mockEq = jest.fn().mockReturnValue({ order: mockOrder });
+    const mockSelect = jest.fn().mockReturnValue({ is: mockIs, eq: mockEq, order: mockOrder });
     (supabase.from as jest.Mock).mockReturnValue({ select: mockSelect });
 
-    const response = await GET();
+    const req = new Request('http://localhost');
+    const response = await GET(req);
     const data = await response.json();
 
     expect(response.status).toBe(500);
@@ -46,10 +52,13 @@ describe('GET /api/log/memories', () => {
     ];
     const mockLimit = jest.fn().mockResolvedValue({ data: mockMemories, error: null });
     const mockOrder = jest.fn().mockReturnValue({ limit: mockLimit });
-    const mockSelect = jest.fn().mockReturnValue({ order: mockOrder });
+    const mockIs = jest.fn().mockReturnValue({ order: mockOrder });
+    const mockEq = jest.fn().mockReturnValue({ order: mockOrder });
+    const mockSelect = jest.fn().mockReturnValue({ is: mockIs, eq: mockEq, order: mockOrder });
     (supabase.from as jest.Mock).mockReturnValue({ select: mockSelect });
 
-    const response = await GET();
+    const req = new Request('http://localhost');
+    const response = await GET(req);
     const data = await response.json();
 
     expect(response.status).toBe(200);
@@ -68,10 +77,13 @@ describe('GET /api/log/memories', () => {
   it('should return empty array if data is null', async () => {
     const mockLimit = jest.fn().mockResolvedValue({ data: null, error: null });
     const mockOrder = jest.fn().mockReturnValue({ limit: mockLimit });
-    const mockSelect = jest.fn().mockReturnValue({ order: mockOrder });
+    const mockIs = jest.fn().mockReturnValue({ order: mockOrder });
+    const mockEq = jest.fn().mockReturnValue({ order: mockOrder });
+    const mockSelect = jest.fn().mockReturnValue({ is: mockIs, eq: mockEq, order: mockOrder });
     (supabase.from as jest.Mock).mockReturnValue({ select: mockSelect });
 
-    const response = await GET();
+    const req = new Request('http://localhost');
+    const response = await GET(req);
     const data = await response.json();
 
     expect(response.status).toBe(200);
