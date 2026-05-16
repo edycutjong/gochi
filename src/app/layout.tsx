@@ -78,6 +78,14 @@ export default function RootLayout({
               </div>
             </div>
             <div className="flex items-center gap-4">
+              <a
+                href="/pitch"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded border border-[var(--gochi-purple)]/30 bg-[var(--gochi-purple)]/10 text-[var(--gochi-purple)] font-mono text-[10px] hover:border-[var(--gochi-purple)]/60 hover:bg-[var(--gochi-purple)]/20 transition-all"
+              >
+                ▶ PITCH
+              </a>
               <WalletConnect />
             </div>
           </header>

@@ -54,6 +54,14 @@ export default function LandingPage() {
             <Link2 className="w-4 h-4" />
             View Contract
           </a>
+          <a
+            href="/pitch"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-6 py-4 font-mono text-sm text-[var(--gochi-purple)] border border-[var(--gochi-purple)]/30 rounded hover:border-[var(--gochi-purple)]/60 hover:bg-[var(--gochi-purple)]/10 transition-colors"
+          >
+            ▶ Pitch Deck
+          </a>
         </div>
 
         {/* Stats row */}
