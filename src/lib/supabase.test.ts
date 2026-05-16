@@ -50,7 +50,7 @@ describe('supabase client', () => {
     require('./supabase');
     const { createClient } = require('@supabase/supabase-js');
 
-    expect(createClient).toHaveBeenCalledWith('', '');
+    expect(createClient).toHaveBeenCalledWith('https://placeholder.supabase.co', 'placeholder_key');
     expect(consoleWarnSpy).toHaveBeenCalledWith('Supabase URL or Key is missing. Check your .env.local file.');
   });
 });
