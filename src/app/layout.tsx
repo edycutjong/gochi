@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono, Press_Start_2P } from "next/font/google";
+import Link from "next/link";
 import "./globals.css";
 import { Providers } from "./providers";
 
@@ -68,10 +69,10 @@ export default function RootLayout({
         <Providers>
           <header className="flex-none h-16 border-b border-[var(--gochi-border)] bg-[var(--gochi-panel)] px-6 flex items-center justify-between sticky top-0 z-50">
             <div className="flex items-center gap-4">
-              <div className="flex items-center gap-2">
+              <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
                 <div className="w-2 h-2 rounded-full bg-[var(--gochi-green)] shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
                 <h1 className="font-display text-[var(--gochi-cyan)] text-xl tracking-tighter">GOCHI</h1>
-              </div>
+              </Link>
               <div className="hidden sm:block px-2 py-0.5 rounded border border-[var(--gochi-cyan)]/30 bg-[var(--gochi-cyan)]/10 text-[var(--gochi-cyan)] font-mono text-[10px] shadow-[0_0_10px_rgba(6,182,212,0.1)]">
                 0G TESTNET
               </div>

@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { WagmiProvider, createConfig, http } from 'wagmi';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
-import { injected, metaMask } from 'wagmi/connectors';
+import { injected, metaMask, walletConnect } from 'wagmi/connectors';
 
 // 0G Galileo Testnet custom chain definition
 const zeroG = {
@@ -23,6 +23,7 @@ const config = createConfig({
   chains: [zeroG],
   connectors: [
     metaMask(),
+    walletConnect({ projectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID! }),
     injected(),
   ],
   transports: {
