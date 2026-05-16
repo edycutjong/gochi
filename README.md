@@ -27,6 +27,22 @@
 
 ---
 
+## 🧑‍⚖️ For Judges (Quick Start)
+
+Welcome! If you are evaluating Gochi for the **HackQuest 0G APAC Hackathon**, here is everything you need to test the project immediately:
+
+1. **🚀 Live App:** [gochi.edycu.dev](https://gochi.edycu.dev)
+2. **📊 Pitch Deck:** [gochi.edycu.dev/pitch/index.html](https://gochi.edycu.dev/pitch/index.html)
+3. **🎬 Pitch Video:** [YouTube Demo](https://youtu.be/your-video) *(Please replace `your-video` with the actual video link when published)*
+
+**Testing Instructions:**
+1. Switch your Web3 wallet (e.g., MetaMask) to the **0G Galileo Testnet** (Chain ID: 16602).
+2. Connect your wallet and sign the secure authentication message.
+3. Mint your first Gochi AI pet.
+4. Chat with your Gochi! Every interaction and memory is securely archived on the **0G Storage Node**.
+
+---
+
 ## 📸 See it in Action
 
 <div align="center">
