@@ -52,23 +52,23 @@ export default function StatBars({ stats }: { stats: Stats }) {
       <div className="flex items-center justify-between gap-4 font-mono text-sm">
         <div className="flex items-center gap-1.5 w-28">
           {icon}
-          <span className={critical ? 'text-[var(--gochi-red)]' : 'text-[var(--gochi-muted)]'}>{label}</span>
-          {critical && <AlertTriangle className="w-3 h-3 text-[var(--gochi-red)] animate-pulse" />}
+          <span className={critical ? 'text-gochi-red' : 'text-gochi-muted'}>{label}</span>
+          {critical && <AlertTriangle className="w-3 h-3 text-gochi-red animate-pulse" />}
         </div>
 
         <div className="relative flex-1">
           <div
-            className={`h-4 bg-[var(--gochi-bg)] border rounded-sm overflow-hidden flex transition-colors duration-300 ${
-              critical ? 'border-[var(--gochi-red)]/40' : 'border-[var(--gochi-border)]'
+            className={`h-4 bg-gochi-bg border rounded-sm overflow-hidden flex transition-colors duration-300 ${
+              critical ? 'border-gochi-red/40' : 'border-gochi-border'
             }`}
           >
             {Array.from({ length: 10 }).map((_, i) => (
               <div
                 key={i}
-                className={`h-full flex-1 border-r border-[var(--gochi-panel)] last:border-0 transition-colors duration-300 ${
+                className={`h-full flex-1 border-r border-gochi-panel last:border-0 transition-colors duration-300 ${
                   i < fillChunks
                     ? critical
-                      ? 'bg-[var(--gochi-red)] animate-pulse'
+                      ? 'bg-gochi-red animate-pulse'
                       : fillColor
                     : 'bg-transparent'
                 }`}
@@ -81,7 +81,7 @@ export default function StatBars({ stats }: { stats: Stats }) {
             <span
               key={`${key}-${flashKey}`}
               className={`absolute right-0 top-0 -translate-y-full text-[11px] font-mono font-bold pointer-events-none animate-fade-up ${
-                d > 0 ? 'text-[var(--gochi-green)]' : 'text-[var(--gochi-red)]'
+                d > 0 ? 'text-gochi-green' : 'text-gochi-red'
               }`}
             >
               {d > 0 ? `+${d}` : d}
@@ -89,7 +89,7 @@ export default function StatBars({ stats }: { stats: Stats }) {
           )}
         </div>
 
-        <div className={`w-8 text-right tabular-nums ${critical ? 'text-[var(--gochi-red)]' : 'text-[var(--gochi-text)]'}`}>
+        <div className={`w-8 text-right tabular-nums ${critical ? 'text-gochi-red' : 'text-gochi-text'}`}>
           {Math.round(value)}
         </div>
       </div>
@@ -98,16 +98,16 @@ export default function StatBars({ stats }: { stats: Stats }) {
 
   const anyCritical = isCritical(stats.hunger) || isCritical(stats.mood) || isCritical(stats.energy);
 
-  const hungerColor = stats.hunger < 30 ? 'bg-[var(--gochi-red)]' : 'bg-[var(--gochi-green)]';
-  const moodColor   = 'bg-[var(--gochi-cyan)]';
-  const energyColor = stats.energy < 30 ? 'bg-[var(--gochi-amber)]' : 'bg-[var(--gochi-purple)]';
+  const hungerColor = stats.hunger < 30 ? 'bg-gochi-red' : 'bg-gochi-green';
+  const moodColor   = 'bg-gochi-cyan';
+  const energyColor = stats.energy < 30 ? 'bg-gochi-amber' : 'bg-gochi-purple';
 
   return (
     <div
-      className={`space-y-4 p-5 bg-[var(--gochi-panel)] border rounded-xl shadow-lg transition-all duration-500 ${
+      className={`space-y-4 p-5 bg-gochi-panel border rounded-xl shadow-lg transition-all duration-500 ${
         anyCritical
-          ? 'border-[var(--gochi-red)]/40 shadow-[0_0_15px_rgba(239,68,68,0.08)]'
-          : 'border-[var(--gochi-border)]'
+          ? 'border-gochi-red/40 shadow-[0_0_15px_rgba(239,68,68,0.08)]'
+          : 'border-gochi-border'
       }`}
     >
       {renderBar('hunger', 'Hunger', <Drumstick className="w-4 h-4 text-[#fca5a5]" />, hungerColor)}

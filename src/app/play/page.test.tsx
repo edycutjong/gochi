@@ -66,6 +66,18 @@ describe('PlayPage', () => {
     expect(screen.getByText('Connect your wallet to hatch your Gochi.')).toBeInTheDocument();
   });
 
+  it('enters demo mode when clicking Try Demo', () => {
+    (useAccount as jest.Mock).mockReturnValue({ isConnected: false });
+    render(<PlayPage />);
+    
+    act(() => {
+      fireEvent.click(screen.getByText('Try Demo'));
+    });
+
+    // Should render MintFlow, which we mocked with 'mint-button'
+    expect(screen.getByTestId('mint-button')).toBeInTheDocument();
+  });
+
   it('renders wrong network state', () => {
     (useAccount as jest.Mock).mockReturnValue({ isConnected: true });
     (useChainId as jest.Mock).mockReturnValue(1); // Not 16602

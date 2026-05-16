@@ -165,20 +165,20 @@ export default function PlayPage() {
   if (!isConnected && !isDemoMode) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-8 text-center font-mono space-y-6 min-h-[50vh]">
-        <Plug className="w-14 h-14 animate-pulse text-[var(--gochi-cyan)] opacity-80" />
+        <Plug className="w-14 h-14 animate-pulse text-gochi-cyan opacity-80" />
         <div className="space-y-4 flex flex-col items-center">
-          <p className="text-[var(--gochi-text)] text-base">Connect your wallet to hatch your Gochi.</p>
+          <p className="text-gochi-text text-base">Connect your wallet to hatch your Gochi.</p>
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <WalletConnect />
             <button 
               onClick={() => setIsDemoMode(true)}
-              className="px-6 py-2.5 rounded-lg font-mono text-sm border border-[var(--gochi-border)] text-[var(--gochi-text)] hover:bg-[var(--gochi-panel)] hover:border-[var(--gochi-cyan)] transition-colors"
+              className="px-6 py-2.5 rounded-lg font-mono text-sm border border-gochi-border text-gochi-text hover:bg-gochi-panel hover:border-gochi-cyan transition-colors"
             >
               Try Demo
             </button>
           </div>
         </div>
-        <p className="text-[10px] text-[var(--gochi-muted)] opacity-50">Requires 0G Galileo Testnet · Chain ID {REQUIRED_CHAIN_ID}</p>
+        <p className="text-[10px] text-gochi-muted opacity-50">Requires 0G Galileo Testnet · Chain ID {REQUIRED_CHAIN_ID}</p>
       </div>
     );
   }
@@ -186,14 +186,14 @@ export default function PlayPage() {
   if (isConnected && chainId !== REQUIRED_CHAIN_ID && !isDemoMode) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-8 text-center font-mono space-y-6 min-h-[50vh]">
-        <Plug className="w-14 h-14 text-[var(--gochi-amber)] opacity-80" />
+        <Plug className="w-14 h-14 text-gochi-amber opacity-80" />
         <div className="space-y-2">
-          <p className="text-[var(--gochi-amber)] text-base font-semibold">Wrong network</p>
-          <p className="text-sm text-[var(--gochi-muted)]">
-            Switch to <strong className="text-[var(--gochi-text)]">0G Galileo Testnet</strong> (Chain ID: {REQUIRED_CHAIN_ID}) in your wallet, then reload.
+          <p className="text-gochi-amber text-base font-semibold">Wrong network</p>
+          <p className="text-sm text-gochi-muted">
+            Switch to <strong className="text-gochi-text">0G Galileo Testnet</strong> (Chain ID: {REQUIRED_CHAIN_ID}) in your wallet, then reload.
           </p>
         </div>
-        <div className="text-[10px] text-[var(--gochi-muted)] space-y-1 opacity-60">
+        <div className="text-[10px] text-gochi-muted space-y-1 opacity-60">
           <p>RPC: https://evmrpc-testnet.0g.ai</p>
           <p>Explorer: https://chainscan-galileo.0g.ai</p>
         </div>
@@ -218,8 +218,8 @@ export default function PlayPage() {
       {/* Ambient background */}
       <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden">
         <div className="absolute inset-0 cyber-grid opacity-[0.08]" />
-        <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-[var(--gochi-cyan)] opacity-[0.04] blur-[120px] rounded-full" />
-        <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-[var(--gochi-purple)] opacity-[0.03] blur-[100px] rounded-full" />
+        <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-gochi-cyan opacity-[0.04] blur-[120px] rounded-full" />
+        <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-gochi-purple opacity-[0.03] blur-[100px] rounded-full" />
       </div>
     <div className="flex-1 min-h-0 p-4 md:p-6 lg:p-8 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-6 overflow-hidden">
       {/* Left Column: Pet & Actions */}
@@ -248,7 +248,7 @@ export default function PlayPage() {
     </div>
 
       {/* 0G tech stack strip */}
-      <div className="flex-none flex items-center justify-center gap-4 py-2 border-t border-[var(--gochi-border)] bg-[var(--gochi-panel)]/40 flex-wrap">
+      <div className="flex-none flex items-center justify-center gap-4 py-2 border-t border-gochi-border bg-gochi-panel/40 flex-wrap">
         {[
           { label: '0G Chain', sub: 'INFT', color: 'var(--gochi-purple)' },
           { label: '0G KV Store', sub: 'State', color: 'var(--gochi-cyan)' },
@@ -258,7 +258,7 @@ export default function PlayPage() {
           <div key={label} className="flex items-center gap-1.5 font-mono text-[10px]">
             <div className="w-1.5 h-1.5 rounded-full" style={{ background: color }} />
             <span style={{ color }} className="font-bold">{label}</span>
-            <span className="text-[var(--gochi-muted)]">· {sub}</span>
+            <span className="text-gochi-muted">· {sub}</span>
           </div>
         ))}
       </div>

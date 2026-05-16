@@ -17,7 +17,12 @@
     "contract:deploy:local": "hardhat run scripts/deploy.ts --network localhost",
     "contract:deploy:0g": "hardhat run scripts/deploy.ts --network 0g-mainnet",
     "contract:deploy:testnet": "node scripts/deploy.mjs testnet",
-    "contract:deploy:mainnet": "node scripts/deploy.mjs mainnet"
+    "contract:deploy:mainnet": "node scripts/deploy.mjs mainnet",
+    "demo:screenshots": "node scripts/demo/screenshots.mjs",
+    "demo:screenshots:local": "node scripts/demo/screenshots.mjs --local",
+    "demo:record": "bash scripts/demo/record.sh",
+    "demo:gif": "bash scripts/demo/gif.sh",
+    "demo:trim": "bash scripts/demo/trim.sh"
   },
   "dependencies": {
     "@0gfoundation/0g-storage-ts-sdk": "^1.2.9",
@@ -49,6 +54,7 @@
     "hardhat": "^3.4.5",
     "jest": "^30.4.2",
     "jest-environment-jsdom": "^30.4.1",
+    "puppeteer": "^25.0.2",
     "tailwindcss": "^4",
     "ts-jest": "^29.4.9",
     "ts-node": "^10.9.2",

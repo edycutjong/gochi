@@ -47,10 +47,10 @@ export default function PetViewport({
   return (
     <div
       onClick={handleViewportClick}
-      className={`relative w-full aspect-square max-w-[288px] mx-auto bg-[var(--gochi-bg)] border-2 rounded-xl overflow-hidden flex items-center justify-center group transition-all duration-500 cursor-pointer ${
+      className={`relative w-full aspect-square max-w-[288px] mx-auto bg-gochi-bg border-2 rounded-xl overflow-hidden flex items-center justify-center group transition-all duration-500 cursor-pointer ${
         isCritical
-          ? 'border-[var(--gochi-red)] shadow-[0_0_20px_rgba(239,68,68,0.35)]'
-          : 'border-[var(--gochi-border)] shadow-[0_0_20px_rgba(6,182,212,0.15)]'
+          ? 'border-gochi-red shadow-[0_0_20px_rgba(239,68,68,0.35)]'
+          : 'border-gochi-border shadow-[0_0_20px_rgba(6,182,212,0.15)]'
       }`}
     >
       {/* Grid background */}
@@ -64,7 +64,7 @@ export default function PetViewport({
 
       {/* Token ID badge */}
       {tokenId !== undefined && (
-        <div className="absolute top-2 left-2 px-2 py-0.5 rounded font-mono text-[9px] bg-[var(--gochi-panel)] border border-[var(--gochi-border)] text-[var(--gochi-muted)] z-10">
+        <div className="absolute top-2 left-2 px-2 py-0.5 rounded font-mono text-[9px] bg-gochi-panel border border-gochi-border text-gochi-muted z-10">
           #{tokenId}
         </div>
       )}
@@ -87,19 +87,19 @@ export default function PetViewport({
       {action === 'play' && (
         <>
           <div className="absolute top-4 right-6 animate-spin-slow">
-            <Star className="w-6 h-6 text-[var(--gochi-amber)]" fill="currentColor" />
+            <Star className="w-6 h-6 text-gochi-amber" fill="currentColor" />
           </div>
           <div className="absolute top-12 left-5 animate-spin-slow" style={{ animationDelay: '0.7s' }}>
-            <Star className="w-4 h-4 text-[var(--gochi-cyan)]" fill="currentColor" />
+            <Star className="w-4 h-4 text-gochi-cyan" fill="currentColor" />
           </div>
         </>
       )}
       {action === 'sleep' && (
         <>
           <div className="absolute top-5 right-7 animate-pulse">
-            <Moon className="w-8 h-8 text-[var(--gochi-purple)]" />
+            <Moon className="w-8 h-8 text-gochi-purple" />
           </div>
-          <div className="absolute top-14 right-4 font-display text-[10px] text-[var(--gochi-purple)] opacity-60 animate-float">
+          <div className="absolute top-14 right-4 font-display text-[10px] text-gochi-purple opacity-60 animate-float">
             zzz
           </div>
         </>
@@ -108,7 +108,7 @@ export default function PetViewport({
       {/* Critical warning */}
       {isCritical && (
         <div className="absolute bottom-2 left-0 right-0 flex justify-center z-10">
-          <span className="font-mono text-[9px] text-[var(--gochi-red)] animate-pulse px-2 py-0.5 bg-[var(--gochi-red)]/10 rounded border border-[var(--gochi-red)]/20">
+          <span className="font-mono text-[9px] text-gochi-red animate-pulse px-2 py-0.5 bg-gochi-red/10 rounded border border-gochi-red/20">
             NEEDS ATTENTION
           </span>
         </div>

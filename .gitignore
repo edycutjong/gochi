@@ -49,6 +49,9 @@ next-env.d.ts
 # Generated assets
 assets/
 
+# Demo output (screenshots, recordings, GIFs)
+/demo-output/
+
 # Supabase local and test files
 supabase/
 test-error.js

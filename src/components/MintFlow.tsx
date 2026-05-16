@@ -166,25 +166,25 @@ export default function MintFlow({ onMint, isDemo }: { onMint: (tokenId?: number
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-8 text-center gap-8">
         <div className="relative w-40 h-40 flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full bg-[var(--gochi-cyan)]/10 blur-2xl animate-pulse" />
+          <div className="absolute inset-0 rounded-full bg-gochi-cyan/10 blur-2xl animate-pulse" />
           <div className="relative z-10">
-            <Egg className="w-32 h-32 text-[var(--gochi-cyan)] animate-pulse" strokeWidth={1.5} />
-            <Sparkles className="absolute -top-4 -right-4 w-8 h-8 text-[var(--gochi-amber)] animate-spin-slow" />
+            <Egg className="w-32 h-32 text-gochi-cyan animate-pulse" strokeWidth={1.5} />
+            <Sparkles className="absolute -top-4 -right-4 w-8 h-8 text-gochi-amber animate-spin-slow" />
           </div>
         </div>
-        <div className="bg-[var(--gochi-panel)] border border-[var(--gochi-border)] rounded-xl p-8 w-full max-w-sm shadow-[0_0_30px_rgba(6,182,212,0.1)]">
-          <h2 className="font-display text-base mb-3 text-[var(--gochi-cyan)]">Confirming on-chain…</h2>
-          <p className="text-[var(--gochi-muted)] text-xs font-mono mb-5 leading-relaxed">
+        <div className="bg-gochi-panel border border-gochi-border rounded-xl p-8 w-full max-w-sm shadow-[0_0_30px_rgba(6,182,212,0.1)]">
+          <h2 className="font-display text-base mb-3 text-gochi-cyan">Confirming on-chain…</h2>
+          <p className="text-gochi-muted text-xs font-mono mb-5 leading-relaxed">
             Transaction submitted. Waiting for block confirmation on 0G Galileo Testnet.
           </p>
           {mintTxHash && (
             <a href={`${CHAIN_SCAN}/tx/${mintTxHash}`} target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-[var(--gochi-cyan)] text-xs font-mono hover:underline mb-4 block">
+              className="inline-flex items-center gap-1.5 text-gochi-cyan text-xs font-mono hover:underline mb-4 block">
               <ExternalLink className="w-3 h-3" />
               {mintTxHash.slice(0, 14)}…
             </a>
           )}
-          <div className="w-full py-3 border border-[var(--gochi-border)] rounded-lg font-display text-xs text-[var(--gochi-muted)] flex items-center justify-center gap-2 opacity-60">
+          <div className="w-full py-3 border border-gochi-border rounded-lg font-display text-xs text-gochi-muted flex items-center justify-center gap-2 opacity-60">
             <span className="animate-pulse">CONFIRMING TX...</span>
           </div>
         </div>
@@ -197,32 +197,32 @@ export default function MintFlow({ onMint, isDemo }: { onMint: (tokenId?: number
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-8 text-center gap-8">
         <div className="relative w-40 h-40 flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full bg-[var(--gochi-cyan)]/10 blur-2xl animate-pulse" />
+          <div className="absolute inset-0 rounded-full bg-gochi-cyan/10 blur-2xl animate-pulse" />
           <div className="relative z-10 w-32 h-32 flex items-center justify-center">
-            <div className="absolute inset-0 rounded-full border-2 border-[var(--gochi-cyan)]/40 animate-ping" />
-            <div className="absolute -inset-6 rounded-full border border-[var(--gochi-amber)]/20 animate-ping" style={{ animationDelay: '0.4s' }} />
-            <Ghost className="w-32 h-32 text-[var(--gochi-cyan)] animate-bounce" strokeWidth={1.5} style={{ filter: 'drop-shadow(0 0 20px #06b6d4)' }} />
+            <div className="absolute inset-0 rounded-full border-2 border-gochi-cyan/40 animate-ping" />
+            <div className="absolute -inset-6 rounded-full border border-gochi-amber/20 animate-ping" style={{ animationDelay: '0.4s' }} />
+            <Ghost className="w-32 h-32 text-gochi-cyan animate-bounce" strokeWidth={1.5} style={{ filter: 'drop-shadow(0 0 20px #06b6d4)' }} />
           </div>
         </div>
-        <div className="bg-[var(--gochi-panel)] border border-[var(--gochi-border)] rounded-xl p-8 w-full max-w-sm shadow-[0_0_30px_rgba(6,182,212,0.1)]">
+        <div className="bg-gochi-panel border border-gochi-border rounded-xl p-8 w-full max-w-sm shadow-[0_0_30px_rgba(6,182,212,0.1)]">
           <div className="flex items-center justify-center gap-2 mb-3">
-            <CheckCircle2 className="w-5 h-5 text-[var(--gochi-green)]" />
-            <h2 className="font-display text-base text-[var(--gochi-green)]">BORN ON 0G CHAIN</h2>
+            <CheckCircle2 className="w-5 h-5 text-gochi-green" />
+            <h2 className="font-display text-base text-gochi-green">BORN ON 0G CHAIN</h2>
           </div>
           {mintedTokenId !== undefined && (
-            <div className="font-display text-5xl text-[var(--gochi-amber)] mb-3 animate-pulse">#{mintedTokenId}</div>
+            <div className="font-display text-5xl text-gochi-amber mb-3 animate-pulse">#{mintedTokenId}</div>
           )}
-          <p className="text-[var(--gochi-muted)] text-xs font-mono mb-4">
+          <p className="text-gochi-muted text-xs font-mono mb-4">
             Your Gochi is now an INFT on the 0G Galileo Testnet. It will live forever.
           </p>
           {mintTxHash && (
             <a href={`${CHAIN_SCAN}/tx/${mintTxHash}`} target="_blank" rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-[var(--gochi-cyan)]/40 text-[var(--gochi-cyan)] text-xs font-mono hover:bg-[var(--gochi-cyan)]/10 transition-colors mb-4">
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-gochi-cyan/40 text-gochi-cyan text-xs font-mono hover:bg-gochi-cyan/10 transition-colors mb-4">
               <ExternalLink className="w-3 h-3" />
               Verify on ChainScan
             </a>
           )}
-          <p className="font-mono text-[10px] text-[var(--gochi-green)] animate-pulse">Entering your world…</p>
+          <p className="font-mono text-[10px] text-gochi-green animate-pulse">Entering your world…</p>
         </div>
       </div>
     );
@@ -244,8 +244,8 @@ export default function MintFlow({ onMint, isDemo }: { onMint: (tokenId?: number
           />
         </div>
         <div className="text-center">
-          <h1 className="font-display text-xl text-[var(--gochi-cyan)]">HATCH YOUR GOCHI</h1>
-          <p className="font-mono text-xs text-[var(--gochi-muted)] mt-1">An immortal AI pet on the 0G Network</p>
+          <h1 className="font-display text-xl text-gochi-cyan">HATCH YOUR GOCHI</h1>
+          <p className="font-mono text-xs text-gochi-muted mt-1">An immortal AI pet on the 0G Network</p>
         </div>
       </div>
 
@@ -253,14 +253,14 @@ export default function MintFlow({ onMint, isDemo }: { onMint: (tokenId?: number
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
 
         {/* ── Left: New Life ── */}
-        <div className="bg-[var(--gochi-panel)] border border-[var(--gochi-border)] rounded-xl p-6 flex flex-col gap-4 hover:border-[var(--gochi-cyan)]/40 hover:shadow-[0_0_20px_rgba(6,182,212,0.08)] transition-all">
+        <div className="bg-gochi-panel border border-gochi-border rounded-xl p-6 flex flex-col gap-4 hover:border-gochi-cyan/40 hover:shadow-[0_0_20px_rgba(6,182,212,0.08)] transition-all">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-[var(--gochi-cyan)] shadow-[0_0_6px_rgba(6,182,212,0.8)]" />
-            <span className="font-display text-sm text-[var(--gochi-cyan)]">NEW LIFE</span>
+            <div className="w-2 h-2 rounded-full bg-gochi-cyan shadow-[0_0_6px_rgba(6,182,212,0.8)]" />
+            <span className="font-display text-sm text-gochi-cyan">NEW LIFE</span>
           </div>
-          <p className="font-mono text-xs text-[var(--gochi-muted)] leading-relaxed">
+          <p className="font-mono text-xs text-gochi-muted leading-relaxed">
             Mint a new Gochi as an INFT on the{' '}
-            <strong className="text-[var(--gochi-text)]">0G Galileo Testnet</strong>.
+            <strong className="text-gochi-text">0G Galileo Testnet</strong>.
             Its memories will be permanently archived on 0G Storage.
           </p>
 
@@ -269,7 +269,7 @@ export default function MintFlow({ onMint, isDemo }: { onMint: (tokenId?: number
               <p className="text-red-400 text-xs font-mono break-words">{errorInfo.message}</p>
               {errorInfo.docsUrl && (
                 <a href={errorInfo.docsUrl} target="_blank" rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-[var(--gochi-cyan)] text-xs font-mono mt-2 hover:underline">
+                  className="inline-flex items-center gap-1 text-gochi-cyan text-xs font-mono mt-2 hover:underline">
                   <ExternalLink className="w-3 h-3" /> Docs
                 </a>
               )}
@@ -278,11 +278,11 @@ export default function MintFlow({ onMint, isDemo }: { onMint: (tokenId?: number
 
           <button
             onClick={handleMint}
-            className="w-full py-3.5 bg-gradient-to-r from-[var(--gochi-cyan)] to-[var(--gochi-purple)] text-white font-display text-xs rounded-lg hover:opacity-90 transition-opacity active:scale-[0.98] mt-auto"
+            className="w-full py-3.5 bg-gradient-to-r from-gochi-cyan to-gochi-purple text-white font-display text-xs rounded-lg hover:opacity-90 transition-opacity active:scale-[0.98] mt-auto"
           >
             MINT YOUR GOCHI
           </button>
-          <div className="font-mono text-[10px] text-[var(--gochi-muted)] text-center -mt-2">
+          <div className="font-mono text-[10px] text-gochi-muted text-center -mt-2">
             {displayAddress
               ? `Contract: 0x${displayAddress.replace(/^0x/i, '').slice(0, 4)}…${displayAddress.slice(-4)}`
               : 'Est. ~0.01 A0GI gas'}
@@ -290,16 +290,16 @@ export default function MintFlow({ onMint, isDemo }: { onMint: (tokenId?: number
         </div>
 
         {/* ── Right: Resume ── */}
-        <div className="bg-[var(--gochi-panel)] border border-[var(--gochi-border)] rounded-xl p-6 flex flex-col gap-3 hover:border-[var(--gochi-purple)]/40 hover:shadow-[0_0_20px_rgba(168,85,247,0.06)] transition-all">
+        <div className="bg-gochi-panel border border-gochi-border rounded-xl p-6 flex flex-col gap-3 hover:border-gochi-purple/40 hover:shadow-[0_0_20px_rgba(168,85,247,0.06)] transition-all">
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-[var(--gochi-purple)] shadow-[0_0_6px_rgba(168,85,247,0.8)]" />
-            <span className="font-display text-sm text-[var(--gochi-purple)]">RESUME</span>
+            <div className="w-2 h-2 rounded-full bg-gochi-purple shadow-[0_0_6px_rgba(168,85,247,0.8)]" />
+            <span className="font-display text-sm text-gochi-purple">RESUME</span>
           </div>
 
           {savedTokenIds.length === 0 ? (
             <div className="flex-1 flex flex-col items-center justify-center gap-2 py-6 opacity-50">
-              <Ghost className="w-8 h-8 text-[var(--gochi-muted)]" strokeWidth={1.5} />
-              <p className="font-mono text-xs text-[var(--gochi-muted)]">No saved Gochis yet.</p>
+              <Ghost className="w-8 h-8 text-gochi-muted" strokeWidth={1.5} />
+              <p className="font-mono text-xs text-gochi-muted">No saved Gochis yet.</p>
             </div>
           ) : (
             <div className="flex flex-col gap-2">
@@ -307,15 +307,15 @@ export default function MintFlow({ onMint, isDemo }: { onMint: (tokenId?: number
                 <button
                   key={id}
                   onClick={() => onMint(id)}
-                  className="flex items-center justify-between px-4 py-3 bg-[var(--gochi-bg)] border border-[var(--gochi-border)] rounded-lg hover:border-[var(--gochi-cyan)]/50 hover:bg-[var(--gochi-cyan)]/5 transition-all group"
+                  className="flex items-center justify-between px-4 py-3 bg-gochi-bg border border-gochi-border rounded-lg hover:border-gochi-cyan/50 hover:bg-gochi-cyan/5 transition-all group"
                 >
                   <div className="flex items-center gap-3">
-                    <Ghost className="w-4 h-4 text-[var(--gochi-cyan)] opacity-60 group-hover:opacity-100 transition-opacity" strokeWidth={1.5} />
-                    <span className="font-mono text-sm text-[var(--gochi-text)]">
-                      Gochi <strong className="text-[var(--gochi-amber)]">#{id}</strong>
+                    <Ghost className="w-4 h-4 text-gochi-cyan opacity-60 group-hover:opacity-100 transition-opacity" strokeWidth={1.5} />
+                    <span className="font-mono text-sm text-gochi-text">
+                      Gochi <strong className="text-gochi-amber">#{id}</strong>
                     </span>
                   </div>
-                  <span className="font-mono text-[10px] text-[var(--gochi-muted)] group-hover:text-[var(--gochi-cyan)] transition-colors">
+                  <span className="font-mono text-[10px] text-gochi-muted group-hover:text-gochi-cyan transition-colors">
                     AWAKEN →
                   </span>
                 </button>
@@ -324,15 +324,15 @@ export default function MintFlow({ onMint, isDemo }: { onMint: (tokenId?: number
           )}
 
           {/* Manual token ID */}
-          <div className="pt-3 border-t border-[var(--gochi-border)] flex flex-col gap-2 mt-auto">
-            <div className="font-mono text-[10px] text-[var(--gochi-muted)]">Load by Token ID</div>
+          <div className="pt-3 border-t border-gochi-border flex flex-col gap-2 mt-auto">
+            <div className="font-mono text-[10px] text-gochi-muted">Load by Token ID</div>
             <div className="flex gap-2">
               <input
                 type="number"
                 placeholder="Token ID"
                 value={loadInput}
                 onChange={(e) => setLoadInput(e.target.value)}
-                className="flex-1 bg-[var(--gochi-bg)] border border-[var(--gochi-border)] rounded-lg px-3 py-2 text-[var(--gochi-text)] text-sm font-mono focus:outline-none focus:border-[var(--gochi-cyan)] transition-colors"
+                className="flex-1 bg-gochi-bg border border-gochi-border rounded-lg px-3 py-2 text-gochi-text text-sm font-mono focus:outline-none focus:border-gochi-cyan transition-colors"
               />
               <button
                 onClick={() => {
@@ -349,7 +349,7 @@ export default function MintFlow({ onMint, isDemo }: { onMint: (tokenId?: number
                   }
                 }}
                 disabled={!loadInput}
-                className="px-4 bg-[var(--gochi-panel)] border border-[var(--gochi-border)] text-[var(--gochi-text)] text-xs font-display rounded-lg hover:border-[var(--gochi-cyan)]/40 disabled:opacity-40 transition-colors"
+                className="px-4 bg-gochi-panel border border-gochi-border text-gochi-text text-xs font-display rounded-lg hover:border-gochi-cyan/40 disabled:opacity-40 transition-colors"
               >
                 LOAD
               </button>

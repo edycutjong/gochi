@@ -18,15 +18,15 @@ describe('LatencyMonitor', () => {
     render(<LatencyMonitor latencies={latencies} />);
 
     expect(screen.getByText('15ms')).toBeInTheDocument();
-    expect(screen.getByText('15ms')).toHaveClass('text-[var(--gochi-green)]'); // < 20
+    expect(screen.getByText('15ms')).toHaveClass('text-gochi-green'); // < 20
 
     expect(screen.getByText('45ms')).toBeInTheDocument();
-    expect(screen.getByText('45ms')).toHaveClass('text-[var(--gochi-amber)]'); // 20 <= val < 50
+    expect(screen.getByText('45ms')).toHaveClass('text-gochi-amber'); // 20 <= val < 50
 
     expect(screen.getByText('850ms')).toBeInTheDocument();
-    expect(screen.getByText('850ms')).toHaveClass('text-[var(--gochi-red)]'); // >= 800
+    expect(screen.getByText('850ms')).toHaveClass('text-gochi-red'); // >= 800
 
     expect(screen.getByText('—')).toBeInTheDocument(); // For ai
-    expect(screen.getByText('—')).toHaveClass('text-[var(--gochi-muted)]');
+    expect(screen.getByText('—')).toHaveClass('text-gochi-muted');
   });
 });

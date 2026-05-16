@@ -62,10 +62,10 @@ export default function ChatPanel({
   };
 
   return (
-    <div className="flex flex-col h-full bg-[var(--gochi-panel)] border border-[var(--gochi-border)] rounded-xl overflow-hidden font-mono shadow-lg relative">
-      <div className="bg-[var(--gochi-bg)] px-4 py-2 border-b border-[var(--gochi-border)] flex justify-between items-center text-xs text-[var(--gochi-muted)]">
+    <div className="flex flex-col h-full bg-gochi-panel border border-gochi-border rounded-xl overflow-hidden font-mono shadow-lg relative">
+      <div className="bg-gochi-bg px-4 py-2 border-b border-gochi-border flex justify-between items-center text-xs text-gochi-muted">
         <span>&gt; TERMINAL_LINK_ESTABLISHED</span>
-        <span className="text-[var(--gochi-purple)]">Powered by 0G Compute</span>
+        <span className="text-gochi-purple">Powered by 0G Compute</span>
       </div>
 
       <div 
@@ -78,7 +78,7 @@ export default function ChatPanel({
               className={`max-w-[80%] rounded-lg px-3 py-2 text-sm flex items-start gap-2 ${
                 msg.sender === 'user'
                   ? 'bg-[#1e293b] text-white rounded-br-none'
-                  : 'bg-[#083344] text-[var(--gochi-cyan)] border border-[var(--gochi-cyan)]/30 rounded-bl-none'
+                  : 'bg-[#083344] text-gochi-cyan border border-gochi-cyan/30 rounded-bl-none'
               }`}
             >
               {msg.sender === 'gochi' && <Bot className="w-4 h-4 mt-0.5 opacity-70 shrink-0" />}
@@ -86,7 +86,7 @@ export default function ChatPanel({
               {msg.teeVerified && (
                 <span
                   title="Response cryptographically verified by 0G Compute TEE"
-                  className="inline-flex items-center gap-1 text-[9px] font-mono text-[var(--gochi-green)] bg-[var(--gochi-green)]/10 border border-[var(--gochi-green)]/30 px-1.5 py-0.5 rounded shrink-0 self-end"
+                  className="inline-flex items-center gap-1 text-[9px] font-mono text-gochi-green bg-gochi-green/10 border border-gochi-green/30 px-1.5 py-0.5 rounded shrink-0 self-end"
                 >
                   <ShieldCheck className="w-3 h-3" />
                   TEE
@@ -97,7 +97,7 @@ export default function ChatPanel({
         ))}
         {isTyping && (
           <div className="flex justify-start">
-            <div className="bg-[#083344] text-[var(--gochi-cyan)] border border-[var(--gochi-cyan)]/30 rounded-lg rounded-bl-none px-3 py-2 text-sm flex gap-1 items-center">
+            <div className="bg-[#083344] text-gochi-cyan border border-gochi-cyan/30 rounded-lg rounded-bl-none px-3 py-2 text-sm flex gap-1 items-center">
               <Bot className="w-4 h-4 mr-2 opacity-70 shrink-0" />
               <span className="animate-bounce">.</span>
               <span className="animate-bounce" style={{ animationDelay: '0.2s' }}>.</span>
@@ -108,11 +108,11 @@ export default function ChatPanel({
         <div ref={messagesEndRef} />
       </div>
 
-      <form onSubmit={handleSend} className="p-3 bg-[var(--gochi-bg)] border-t border-[var(--gochi-border)] flex gap-2 items-center">
-        <span className="text-[var(--gochi-cyan)] flex items-center gap-0.5 shrink-0">
+      <form onSubmit={handleSend} className="p-3 bg-gochi-bg border-t border-gochi-border flex gap-2 items-center">
+        <span className="text-gochi-cyan flex items-center gap-0.5 shrink-0">
           &gt;
           {!isTyping && !input && (
-            <span className="animate-blink text-[var(--gochi-cyan)]">_</span>
+            <span className="animate-blink text-gochi-cyan">_</span>
           )}
         </span>
         <input
@@ -122,13 +122,13 @@ export default function ChatPanel({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder={isTyping ? '' : 'Talk to your Gochi...'}
-          className="flex-1 bg-transparent border-none outline-none text-sm text-[var(--gochi-text)] placeholder:text-[var(--gochi-muted)] caret-[var(--gochi-cyan)]"
+          className="flex-1 bg-transparent border-none outline-none text-sm text-gochi-text placeholder:text-gochi-muted caret-gochi-cyan"
           disabled={isTyping}
         />
         <button
           type="submit"
           disabled={!input.trim() || isTyping}
-          className="px-4 py-2 bg-[var(--gochi-panel)] border border-[var(--gochi-border)] hover:bg-[#1e293b] rounded text-sm disabled:opacity-50 transition-colors"
+          className="px-4 py-2 bg-gochi-panel border border-gochi-border hover:bg-[#1e293b] rounded text-sm disabled:opacity-50 transition-colors"
         >
           SEND
         </button>

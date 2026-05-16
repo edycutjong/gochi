@@ -31,11 +31,11 @@ describe('StatBars', () => {
     };
     const { container } = render(<StatBars stats={lowStats} />);
     
-    // Hunger bar chunks should have 'bg-[var(--gochi-red)]'
-    expect(container.querySelectorAll('[class*="bg-[var(--gochi-red)]"]').length).toBeGreaterThan(0);
+    // Hunger bar chunks should have 'bg-gochi-red'
+    expect(container.querySelectorAll('[class*="bg-gochi-red"]').length).toBeGreaterThan(0);
     
-    // Energy bar chunks are critical, so they will be 'bg-[var(--gochi-red)]' and 'animate-pulse'
-    expect(container.querySelectorAll('[class*="bg-[var(--gochi-red)]"][class*="animate-pulse"]').length).toBeGreaterThan(0);
+    // Energy bar chunks are critical, so they will be 'bg-gochi-red' and 'animate-pulse'
+    expect(container.querySelectorAll('[class*="bg-gochi-red"][class*="animate-pulse"]').length).toBeGreaterThan(0);
   });
 
   it('applies normal styling when stats are high', () => {
@@ -46,11 +46,11 @@ describe('StatBars', () => {
     };
     const { container } = render(<StatBars stats={highStats} />);
     
-    // Hunger bar chunks should have 'bg-[var(--gochi-green)]'
-    expect(container.querySelectorAll('[class*="bg-[var(--gochi-green)]"]').length).toBeGreaterThan(0);
+    // Hunger bar chunks should have 'bg-gochi-green'
+    expect(container.querySelectorAll('[class*="bg-gochi-green"]').length).toBeGreaterThan(0);
     
-    // Energy bar chunks should have 'bg-[var(--gochi-purple)]'
-    expect(container.querySelectorAll('[class*="bg-[var(--gochi-purple)]"]').length).toBeGreaterThan(0);
+    // Energy bar chunks should have 'bg-gochi-purple'
+    expect(container.querySelectorAll('[class*="bg-gochi-purple"]').length).toBeGreaterThan(0);
   });
 
   it('displays stat deltas when stats change', async () => {

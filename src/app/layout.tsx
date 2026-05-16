@@ -65,15 +65,15 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${jetbrainsMono.variable} ${pressStart2p.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans bg-[var(--gochi-bg)] text-[var(--gochi-text)]" suppressHydrationWarning>
+      <body className="min-h-full flex flex-col font-sans bg-gochi-bg text-gochi-text" suppressHydrationWarning>
         <Providers>
-          <header className="flex-none h-16 border-b border-[var(--gochi-border)] bg-[var(--gochi-panel)] px-6 flex items-center justify-between sticky top-0 z-50">
+          <header className="flex-none h-16 border-b border-gochi-border bg-gochi-panel px-6 flex items-center justify-between sticky top-0 z-50">
             <div className="flex items-center gap-4">
               <Link href="/" className="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                <div className="w-2 h-2 rounded-full bg-[var(--gochi-green)] shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
-                <h1 className="font-display text-[var(--gochi-cyan)] text-xl tracking-tighter">GOCHI</h1>
+                <div className="w-2 h-2 rounded-full bg-gochi-green shadow-[0_0_8px_rgba(34,197,94,0.6)]"></div>
+                <h1 className="font-display text-gochi-cyan text-xl tracking-tighter">GOCHI</h1>
               </Link>
-              <div className="hidden sm:block px-2 py-0.5 rounded border border-[var(--gochi-cyan)]/30 bg-[var(--gochi-cyan)]/10 text-[var(--gochi-cyan)] font-mono text-[10px] shadow-[0_0_10px_rgba(6,182,212,0.1)]">
+              <div className="hidden sm:block px-2 py-0.5 rounded border border-gochi-cyan/30 bg-gochi-cyan/10 text-gochi-cyan font-mono text-[10px] shadow-[0_0_10px_rgba(6,182,212,0.1)]">
                 0G TESTNET
               </div>
             </div>
@@ -82,7 +82,7 @@ export default function RootLayout({
                 href="/pitch"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded border border-[var(--gochi-purple)]/30 bg-[var(--gochi-purple)]/10 text-[var(--gochi-purple)] font-mono text-[10px] hover:border-[var(--gochi-purple)]/60 hover:bg-[var(--gochi-purple)]/20 transition-all"
+                className="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded border border-gochi-purple/30 bg-gochi-purple/10 text-gochi-purple font-mono text-[10px] hover:border-gochi-purple/60 hover:bg-gochi-purple/20 transition-all"
               >
                 ▶ PITCH
               </a>

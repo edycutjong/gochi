@@ -37,13 +37,13 @@ export default function MemoryLog({ memories }: { memories: Memory[] }) {
   };
 
   return (
-    <div className="h-full flex flex-col bg-[var(--gochi-panel)] border border-[var(--gochi-border)] rounded-xl overflow-hidden shadow-lg min-h-0">
-      <div className="p-4 border-b border-[var(--gochi-border)] flex items-center justify-between bg-[var(--gochi-bg)] shrink-0">
+    <div className="h-full flex flex-col bg-gochi-panel border border-gochi-border rounded-xl overflow-hidden shadow-lg min-h-0">
+      <div className="p-4 border-b border-gochi-border flex items-center justify-between bg-gochi-bg shrink-0">
         <h3 className="font-display text-sm flex items-center gap-2">
-          <Brain className="w-4 h-4 text-[var(--gochi-purple)]" /> Core Memories
+          <Brain className="w-4 h-4 text-gochi-purple" /> Core Memories
         </h3>
         {memories.length > 0 && (
-          <span className="font-mono text-[10px] text-[var(--gochi-muted)] bg-[var(--gochi-panel)] border border-[var(--gochi-border)] px-2 py-0.5 rounded-full">
+          <span className="font-mono text-[10px] text-gochi-muted bg-gochi-panel border border-gochi-border px-2 py-0.5 rounded-full">
             {memories.length}
           </span>
         )}
@@ -51,7 +51,7 @@ export default function MemoryLog({ memories }: { memories: Memory[] }) {
 
       <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-0">
         {memories.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-center gap-4 text-[var(--gochi-muted)] px-4">
+          <div className="h-full flex flex-col items-center justify-center text-center gap-4 text-gochi-muted px-4">
             <Database className="w-10 h-10 opacity-30" />
             <div className="space-y-1">
               <p className="font-mono text-xs">No memories yet.</p>
@@ -64,43 +64,43 @@ export default function MemoryLog({ memories }: { memories: Memory[] }) {
           memories.map((mem, i) => (
             <div
               key={mem.id}
-              className={`relative p-3 rounded-lg border bg-[var(--gochi-bg)] transition-all ${isNew(mem.id) ? 'animate-slide-in-left' : ''} ${
+              className={`relative p-3 rounded-lg border bg-gochi-bg transition-all ${isNew(mem.id) ? 'animate-slide-in-left' : ''} ${
                 i === 0
-                  ? 'border-[var(--gochi-cyan)]/60 shadow-[0_0_10px_rgba(6,182,212,0.15)]'
-                  : 'border-[var(--gochi-border)] opacity-75'
+                  ? 'border-gochi-cyan/60 shadow-[0_0_10px_rgba(6,182,212,0.15)]'
+                  : 'border-gochi-border opacity-75'
               }`}
             >
               {i !== memories.length - 1 && (
-                <div className="absolute left-5 top-full h-3 w-px bg-[var(--gochi-border)]" />
+                <div className="absolute left-5 top-full h-3 w-px bg-gochi-border" />
               )}
 
               <div className="flex justify-between items-center mb-2">
                 <span className={`text-[10px] px-2 py-0.5 rounded-full border font-mono font-bold tracking-wider ${getTypeStyle(mem.type)}`}>
                   {mem.type}
                 </span>
-                <span className="text-[10px] text-[var(--gochi-muted)] font-mono">{mem.time}</span>
+                <span className="text-[10px] text-gochi-muted font-mono">{mem.time}</span>
               </div>
 
-              <p className="text-xs font-medium mb-2 text-[var(--gochi-text)]">{mem.title}</p>
+              <p className="text-xs font-medium mb-2 text-gochi-text">{mem.title}</p>
 
               <div className="bg-[#0f172a] rounded p-2 text-[10px] font-mono space-y-1">
-                <div className="flex justify-between text-[var(--gochi-muted)]">
+                <div className="flex justify-between text-gochi-muted">
                   <span>Merkle:</span>
-                  <span className="text-[var(--gochi-cyan)]">
+                  <span className="text-gochi-cyan">
                     {mem.merkleRoot ? `0x${mem.merkleRoot.replace(/^0x/i, '').slice(0, 4)}…${mem.merkleRoot.slice(-4)}` : 'pending…'}
                   </span>
                 </div>
-                <div className="flex justify-between pt-1 border-t border-[var(--gochi-border)]">
+                <div className="flex justify-between pt-1 border-t border-gochi-border">
                   <a
                     href="https://storagescan.0g.ai"
                     target="_blank"
                     rel="noreferrer"
-                    className="text-[var(--gochi-purple)] hover:underline"
+                    className="text-gochi-purple hover:underline"
                   >
                     StorageScan ↗
                   </a>
                   {i === 0 && (
-                    <span className="text-[var(--gochi-green)] animate-pulse">● live</span>
+                    <span className="text-gochi-green animate-pulse">● live</span>
                   )}
                 </div>
               </div>

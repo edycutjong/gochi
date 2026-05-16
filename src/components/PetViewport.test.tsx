@@ -41,7 +41,7 @@ describe('PetViewport', () => {
       />
     );
     // The container should have the red border class when critical
-    expect(container.firstChild).toHaveClass('border-[var(--gochi-red)]');
+    expect(container.firstChild).toHaveClass('border-gochi-red');
     // It should also display the critical warning
     expect(container.textContent).toContain('NEEDS ATTENTION');
   });
