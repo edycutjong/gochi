@@ -255,7 +255,7 @@ describe('PlayPage', () => {
       })
       .mockRejectedValueOnce(new Error('Network failure')); // write kv fails
 
-    const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleWarnMock = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
     render(<PlayPage />);
     
@@ -271,9 +271,9 @@ describe('PlayPage', () => {
     expect(screen.getByTestId('pet-viewport')).toHaveAttribute('data-action', 'play');
     
     // Check fetch calls error is caught
-    expect(consoleErrorMock).toHaveBeenCalledWith(expect.any(Error));
+    expect(consoleWarnMock).toHaveBeenCalledWith(expect.stringContaining('Action Error'), expect.any(Error));
 
-    consoleErrorMock.mockRestore();
+    consoleWarnMock.mockRestore();
   });
 
   it('applies passive decay over time', async () => {
@@ -353,7 +353,7 @@ describe('PlayPage', () => {
         status: 500
       });
 
-    const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const consoleWarnMock = jest.spyOn(console, 'warn').mockImplementation(() => {});
 
     render(<PlayPage />);
     
@@ -361,8 +361,8 @@ describe('PlayPage', () => {
       fireEvent.click(screen.getByTestId('mint-button'));
     });
 
-    expect(consoleErrorMock).toHaveBeenCalled();
-    consoleErrorMock.mockRestore();
+    expect(consoleWarnMock).toHaveBeenCalled();
+    consoleWarnMock.mockRestore();
   });
 
   it('handles sleep action and undefined tokenId', async () => {

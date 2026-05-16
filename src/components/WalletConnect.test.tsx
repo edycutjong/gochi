@@ -30,6 +30,7 @@ describe('WalletConnect', () => {
     expect(connectButton).toBeInTheDocument();
 
     fireEvent.click(connectButton);
+    fireEvent.click(screen.getByText('MetaMask'));
     expect(mockConnect).toHaveBeenCalledWith({ connector: { id: 'metaMask', name: 'MetaMask' } });
   });
 
@@ -109,6 +110,7 @@ describe('WalletConnect', () => {
 
     const connectButton = screen.getByText('Connect Wallet');
     fireEvent.click(connectButton);
+    fireEvent.click(screen.getByText('Some Wallet'));
     expect(mockConnect).toHaveBeenCalledWith({ connector: { id: 'someWallet', name: 'Some Wallet' } });
   });
   it('displays user-friendly message when wallet request is already pending', async () => {
@@ -127,6 +129,6 @@ describe('WalletConnect', () => {
       render(<WalletConnect />);
     });
 
-    expect(screen.getByText('Wallet request pending...')).toBeInTheDocument();
+    expect(screen.getByText('Open your wallet extension')).toBeInTheDocument();
   });
 });

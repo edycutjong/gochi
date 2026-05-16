@@ -49,8 +49,8 @@ describe('StatBars', () => {
     // Hunger bar chunks should have 'bg-[var(--gochi-green)]'
     expect(container.querySelectorAll('[class*="bg-[var(--gochi-green)]"]').length).toBeGreaterThan(0);
     
-    // Energy bar chunks should have 'bg-[var(--gochi-pixel)]'
-    expect(container.querySelectorAll('[class*="bg-[var(--gochi-pixel)]"]').length).toBeGreaterThan(0);
+    // Energy bar chunks should have 'bg-[var(--gochi-purple)]'
+    expect(container.querySelectorAll('[class*="bg-[var(--gochi-purple)]"]').length).toBeGreaterThan(0);
   });
 
   it('displays stat deltas when stats change', async () => {

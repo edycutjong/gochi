@@ -21,6 +21,7 @@ jest.mock('@tanstack/react-query', () => {
 jest.mock('wagmi/connectors', () => ({
   injected: jest.fn(),
   metaMask: jest.fn(),
+  walletConnect: jest.fn(),
 }));
 
 describe('Providers', () => {
