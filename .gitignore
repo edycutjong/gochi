@@ -49,3 +49,7 @@ next-env.d.ts
 # Generated assets
 assets/
 
+# Supabase local and test files
+supabase/
+test-error.js
+test_error.js
