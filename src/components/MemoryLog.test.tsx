@@ -24,7 +24,7 @@ describe('MemoryLog', () => {
     expect(screen.getByText('Played ball')).toBeInTheDocument();
     expect(screen.getByText('Took a nap')).toBeInTheDocument();
     
-    expect(screen.getByText('0xabc123…')).toBeInTheDocument();
+    expect(screen.getByText('0xabc1…c123')).toBeInTheDocument();
     expect(screen.getByText('pending…')).toBeInTheDocument(); // Missing merkleRoot
     
     // Links

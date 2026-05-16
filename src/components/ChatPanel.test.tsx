@@ -4,6 +4,7 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ChatPanel from './ChatPanel';
 
 describe('ChatPanel', () => {
+  window.HTMLElement.prototype.scrollIntoView = jest.fn();
   const mockState = { hunger: 50, mood: 50, energy: 50 };
   let fetchSpy: jest.SpyInstance;
 

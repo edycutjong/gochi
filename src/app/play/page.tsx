@@ -71,10 +71,11 @@ export default function PlayPage() {
       })
       .catch(console.error);
 
-    fetch('/api/log/memories')
+    const memoryUrl = tokenId !== undefined ? `/api/log/memories?tokenId=${tokenId}` : '/api/log/memories';
+    fetch(memoryUrl)
       .then((res) => { if (!res.ok) throw new Error(`log/memories ${res.status}`); return res.json(); })
       .then((data) => {
-        if (data.memories?.length) setMemories(data.memories);
+        if (data.memories) setMemories(data.memories);
       })
       .catch(console.error);
   }, [isMinted, isConnected, tokenId]);

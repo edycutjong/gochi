@@ -21,8 +21,8 @@ export default function MemoryLog({ memories }: { memories: Memory[] }) {
   };
 
   return (
-    <div className="h-full flex flex-col bg-[var(--gochi-panel)] border border-[var(--gochi-border)] rounded-xl overflow-hidden shadow-lg">
-      <div className="p-4 border-b border-[var(--gochi-border)] flex items-center justify-between bg-[var(--gochi-bg)]">
+    <div className="h-full flex flex-col bg-[var(--gochi-panel)] border border-[var(--gochi-border)] rounded-xl overflow-hidden shadow-lg min-h-0">
+      <div className="p-4 border-b border-[var(--gochi-border)] flex items-center justify-between bg-[var(--gochi-bg)] shrink-0">
         <h3 className="font-display text-sm flex items-center gap-2">
           <Brain className="w-4 h-4 text-[var(--gochi-purple)]" /> Core Memories
         </h3>
@@ -33,7 +33,7 @@ export default function MemoryLog({ memories }: { memories: Memory[] }) {
         )}
       </div>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 min-h-0">
         {memories.length === 0 ? (
           <div className="h-full flex flex-col items-center justify-center text-center gap-4 text-[var(--gochi-muted)] px-4">
             <Database className="w-10 h-10 opacity-30" />
@@ -71,7 +71,7 @@ export default function MemoryLog({ memories }: { memories: Memory[] }) {
                 <div className="flex justify-between text-[var(--gochi-muted)]">
                   <span>Merkle:</span>
                   <span className="text-[var(--gochi-cyan)]">
-                    {mem.merkleRoot ? `${mem.merkleRoot.substring(0, 10)}…` : 'pending…'}
+                    {mem.merkleRoot ? `0x${mem.merkleRoot.replace(/^0x/i, '').slice(0, 4)}…${mem.merkleRoot.slice(-4)}` : 'pending…'}
                   </span>
                 </div>
                 <div className="flex justify-between pt-1 border-t border-[var(--gochi-border)]">

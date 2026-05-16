@@ -1,11 +1,17 @@
 import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const { data, error } = await supabase
-      .from('gochi_memories')
-      .select('*')
+    const { searchParams } = new URL(request.url);
+    const tokenId = searchParams.get('tokenId');
+
+    let query = supabase.from('gochi_memories').select('*');
+    if (tokenId) {
+      query = query.eq('token_id', tokenId);
+    }
+
+    const { data, error } = await query
       .order('id', { ascending: false })
       .limit(20);
 

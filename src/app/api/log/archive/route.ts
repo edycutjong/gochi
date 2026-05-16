@@ -33,11 +33,13 @@ export async function POST(request: Request) {
         source = 'zerog';
       } catch (zkErr: unknown) {
         console.warn('0G Log upload failed, falling back to Supabase:', zkErr instanceof Error ? zkErr.message : zkErr);
-        rootHash = `0x${Math.random().toString(16).slice(2).padStart(64, '0')}`;
+        const crypto = await import('crypto');
+        rootHash = `0x${crypto.randomBytes(32).toString('hex')}`;
         source = 'supabase';
       }
     } else {
-      rootHash = `0x${Math.random().toString(16).slice(2).padStart(64, '0')}`;
+      const crypto = await import('crypto');
+      rootHash = `0x${crypto.randomBytes(32).toString('hex')}`;
       source = 'supabase';
     }
 
@@ -48,6 +50,7 @@ export async function POST(request: Request) {
       time,
       merkle_root: rootHash,
       tx_hash: uploadTxHash ?? kvTxHash,
+      token_id: tokenId ? String(tokenId) : null,
     };
 
     const { error } = await supabase.from('gochi_memories').insert([newMemory]);

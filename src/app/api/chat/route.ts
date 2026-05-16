@@ -24,12 +24,14 @@ Talk like a digital cyberpunk pet. Keep responses short (1-2 sentences) and play
 React to your stats — if very hungry (<30) be grumpy, if happy (>80) be extra playful, if tired (<30 energy) be sleepy.
 Reference your memories occasionally to show you remember past interactions.`;
 
+    const isRouter = !!process.env.ROUTER_API_KEY || !!process.env.ROUTER_URL;
     const apiUrl =
       process.env.ROUTER_URL ||
       (process.env.ROUTER_API_KEY
         ? 'https://router-api-testnet.integratenetwork.work/v1/chat/completions'
         : 'https://api.openai.com/v1/chat/completions');
     const apiKey = process.env.ROUTER_API_KEY || process.env.OPENAI_API_KEY;
+    const modelName = isRouter ? 'qwen/qwen-2.5-7b-instruct' : 'gpt-4o-mini';
 
     if (!apiKey) {
       await new Promise((resolve) => setTimeout(resolve, 800));
@@ -46,7 +48,7 @@ Reference your memories occasionally to show you remember past interactions.`;
         Authorization: `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: 'qwen/qwen-2.5-7b-instruct',
+        model: modelName,
         messages: [
           { role: 'system', content: systemPrompt },
           { role: 'user', content: message || 'Hello!' },
@@ -58,9 +60,16 @@ Reference your memories occasionally to show you remember past interactions.`;
 
     if (!response.ok) {
       console.warn(`Compute Router API returned ${response.status}`);
+      const errorData = await response.json().catch(() => null);
+      console.error('Error Details:', errorData);
 
       let errorReason = 'offline or 401';
-      if (response.status === 402) errorReason = '402 Payment Required — top up at pc.0g.ai';
+      if (response.status === 402) {
+         errorReason = '402 Payment Required — top up at pc.0g.ai';
+         if (errorData?.error?.message) {
+            errorReason += ` (${errorData.error.message})`;
+         }
+      }
       else if (response.status !== 401) errorReason = `error ${response.status}`;
 
       let fallbackReply = `I'm your Gochi! Beep boop. (Compute Router ${errorReason})`;
