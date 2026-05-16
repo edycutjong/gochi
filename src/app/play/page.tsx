@@ -196,7 +196,7 @@ export default function PlayPage() {
         <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-[var(--gochi-cyan)] opacity-[0.04] blur-[120px] rounded-full" />
         <div className="absolute bottom-1/3 right-1/4 w-[400px] h-[400px] bg-[var(--gochi-purple)] opacity-[0.03] blur-[100px] rounded-full" />
       </div>
-    <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto h-full lg:h-[calc(100vh-5rem)] grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0">
+    <div className="p-4 md:p-6 lg:p-8 max-w-7xl mx-auto lg:h-[calc(100vh-5rem)] grid grid-cols-1 lg:grid-cols-12 gap-6 min-h-0">
       {/* Left Column: Pet & Actions */}
       <div className="lg:col-span-4 flex flex-col gap-6 min-h-0">
         <PetViewport action={action} stats={stats} tokenId={tokenId} />
@@ -221,6 +221,22 @@ export default function PlayPage() {
         <LatencyMonitor latencies={latencies} />
       </div>
     </div>
+
+      {/* 0G tech stack strip */}
+      <div className="flex items-center justify-center gap-4 py-3 border-t border-[var(--gochi-border)] bg-[var(--gochi-panel)]/40 flex-wrap">
+        {[
+          { label: '0G Chain', sub: 'INFT', color: 'var(--gochi-purple)' },
+          { label: '0G KV Store', sub: 'State', color: 'var(--gochi-cyan)' },
+          { label: '0G Log Store', sub: 'Memory', color: 'var(--gochi-green)' },
+          { label: '0G Compute', sub: 'AI', color: 'var(--gochi-amber)' },
+        ].map(({ label, sub, color }) => (
+          <div key={label} className="flex items-center gap-1.5 font-mono text-[10px]">
+            <div className="w-1.5 h-1.5 rounded-full" style={{ background: color }} />
+            <span style={{ color }} className="font-bold">{label}</span>
+            <span className="text-[var(--gochi-muted)]">· {sub}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

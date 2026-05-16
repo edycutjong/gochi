@@ -160,7 +160,7 @@ export default function MintFlow({ onMint }: { onMint: (tokenId?: number) => Pro
   const displayAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS;
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center max-w-md mx-auto h-[600px]">
+    <div className="flex-1 flex flex-col items-center justify-center p-8 text-center max-w-md mx-auto min-h-[600px] py-12">
       {/* Character visual */}
       <div className="mb-10 relative w-48 h-48 mx-auto flex items-center justify-center">
         <div className="absolute inset-0 bg-radial from-[var(--gochi-cyan)]/30 to-transparent blur-2xl animate-pulse" />
