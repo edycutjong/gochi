@@ -27,7 +27,11 @@ const config = createConfig({
     injected(),
   ],
   transports: {
-    [zeroG.id]: http(),
+    [zeroG.id]: http('https://evmrpc-testnet.0g.ai', {
+      batch: false,
+      retryCount: 3,
+      retryDelay: 1000,
+    }),
   },
   ssr: true,
 });
