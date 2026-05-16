@@ -9,6 +9,8 @@ export async function GET(request: Request) {
     let query = supabase.from('gochi_memories').select('*');
     if (tokenId) {
       query = query.eq('token_id', tokenId);
+    } else {
+      query = query.is('token_id', null);
     }
 
     const { data, error } = await query
