@@ -22,7 +22,10 @@
     "demo:screenshots:local": "node scripts/demo/screenshots.mjs --local",
     "demo:record": "bash scripts/demo/record.sh",
     "demo:gif": "bash scripts/demo/gif.sh",
-    "demo:trim": "bash scripts/demo/trim.sh"
+    "demo:trim": "bash scripts/demo/trim.sh",
+    "demo:pitch": "node scripts/demo/record-pitch.mjs",
+    "demo:pitch:local": "node scripts/demo/record-pitch.mjs --local",
+    "demo:addmusic": "bash scripts/demo/addmusic.sh"
   },
   "dependencies": {
     "@0gfoundation/0g-storage-ts-sdk": "^1.2.9",

@@ -60,6 +60,28 @@
 
   .key-hint { position:fixed; top:16px; right:20px; font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--muted); opacity:0.5; }
 
+  /* ── Autoplay progress bar ── */
+  .auto-bar-track {
+    position:fixed; top:0; left:0; right:0; height:3px;
+    background:rgba(255,255,255,0.06); z-index:200; pointer-events:none;
+  }
+  .auto-bar-fill {
+    height:100%; width:0%; background:var(--cyan);
+    box-shadow:0 0 8px rgba(6,182,212,0.8);
+    transition:none;
+  }
+  .auto-bar-fill.running {
+    transition:width linear;
+  }
+
+  /* autoplay button in nav */
+  .nav-play { background:none; border:1px solid rgba(6,182,212,0.35); cursor:pointer; color:var(--cyan);
+    padding:4px 12px; border-radius:6px; font-family:'JetBrains Mono',monospace; font-size:13px;
+    transition:background 0.2s,border-color 0.2s; letter-spacing:0.05em; }
+  .nav-play:hover { background:rgba(6,182,212,0.15); border-color:var(--cyan); }
+  .nav-play.playing { color:var(--amber); border-color:rgba(245,158,11,0.4); }
+  .nav-play.playing:hover { background:rgba(245,158,11,0.1); border-color:var(--amber); }
+
   /* ── Typography ── */
   .font-pixel { font-family:'Press Start 2P',monospace; }
   .font-mono  { font-family:'JetBrains Mono',monospace; }
@@ -842,30 +864,41 @@
 
   </div><!-- /slides-wrap -->
 
+  <!-- Autoplay progress bar -->
+  <div class="auto-bar-track"><div class="auto-bar-fill" id="autoBar"></div></div>
+
   <div class="nav">
-    <button class="nav-btn" id="prevBtn" onclick="go(-1)" disabled>←</button>
+    <button class="nav-btn" id="prevBtn" onclick="manualGo(-1)" disabled>←</button>
     <div class="nav-dots" id="dots"></div>
     <div class="slide-counter" id="counter">1 / 10</div>
-    <button class="nav-btn" id="nextBtn" onclick="go(1)">→</button>
+    <button class="nav-btn" id="nextBtn" onclick="manualGo(1)">→</button>
+    <button class="nav-play" id="playBtn" onclick="toggleAutoplay()" title="Autoplay (P)">▶ AUTO</button>
   </div>
 
-  <div class="key-hint">← → navigate &nbsp;·&nbsp; F fullscreen</div>
+  <div class="key-hint">← → navigate &nbsp;·&nbsp; P autoplay &nbsp;·&nbsp; F fullscreen</div>
 </div>
 
 <script>
-  const TOTAL = 10;
-  let cur = 0;
+  const TOTAL          = 10;
+  const SLIDE_DURATION = 5000; // ms per slide during autoplay
+  let cur      = 0;
+  let playing  = false;
+  let autoTimer = null;
+  let barStart  = null;
+  let barRaf    = null;
 
   const wrap    = document.getElementById('slidesWrap');
   const prevBtn = document.getElementById('prevBtn');
   const nextBtn = document.getElementById('nextBtn');
   const counter = document.getElementById('counter');
   const dotsEl  = document.getElementById('dots');
+  const playBtn = document.getElementById('playBtn');
+  const autoBar = document.getElementById('autoBar');
 
   for (let i = 0; i < TOTAL; i++) {
     const d = document.createElement('button');
     d.className = 'nav-dot' + (i === 0 ? ' active' : '');
-    d.onclick = () => goTo(i);
+    d.onclick = () => { stopAutoplay(); goTo(i); };
     dotsEl.appendChild(d);
   }
 
@@ -880,17 +913,84 @@
 
   function go(d) { goTo(cur + d); }
 
+  // Manual nav stops autoplay
+  function manualGo(d) { stopAutoplay(); go(d); }
+
+  /* ── Autoplay ── */
+  function startAutoplay() {
+    playing = true;
+    playBtn.textContent = '⏸ PAUSE';
+    playBtn.classList.add('playing');
+    scheduleSlide();
+  }
+
+  function stopAutoplay() {
+    playing = false;
+    playBtn.textContent = '▶ AUTO';
+    playBtn.classList.remove('playing');
+    clearTimeout(autoTimer);
+    cancelAnimationFrame(barRaf);
+    autoBar.classList.remove('running');
+    autoBar.style.width = '0%';
+    autoBar.style.transition = 'none';
+  }
+
+  function scheduleSlide() {
+    // Animate progress bar
+    autoBar.style.transition = 'none';
+    autoBar.style.width = '0%';
+    // force reflow so transition reset applies
+    autoBar.getBoundingClientRect();
+    autoBar.style.transition = `width ${SLIDE_DURATION}ms linear`;
+    autoBar.style.width = '100%';
+
+    autoTimer = setTimeout(() => {
+      if (cur < TOTAL - 1) {
+        go(1);
+        scheduleSlide();
+      } else {
+        // reached last slide — stop
+        stopAutoplay();
+      }
+    }, SLIDE_DURATION);
+  }
+
+  function toggleAutoplay() {
+    if (playing) {
+      stopAutoplay();
+    } else {
+      // restart from beginning if already at end
+      if (cur === TOTAL - 1) goTo(0);
+      startAutoplay();
+    }
+  }
+
+  /* ── Keyboard ── */
   document.addEventListener('keydown', e => {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') { e.preventDefault(); go(1); }
-    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                    { e.preventDefault(); go(-1); }
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') { e.preventDefault(); manualGo(1); }
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')   { e.preventDefault(); manualGo(-1); }
+    if (e.key === ' ')  { e.preventDefault(); toggleAutoplay(); }
+    if (e.key === 'p' || e.key === 'P') toggleAutoplay();
     if (e.key === 'f' || e.key === 'F') document.documentElement.requestFullscreen?.();
-    if (e.key === 'Home') goTo(0);
-    if (e.key === 'End')  goTo(TOTAL - 1);
+    if (e.key === 'Home') { stopAutoplay(); goTo(0); }
+    if (e.key === 'End')  { stopAutoplay(); goTo(TOTAL - 1); }
   });
 
+  /* ── Touch swipe ── */
   let tx = 0;
   document.addEventListener('touchstart', e => { tx = e.touches[0].clientX; }, { passive: true });
-  document.addEventListener('touchend',   e => { const dx = e.changedTouches[0].clientX - tx; if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1); });
+  document.addEventListener('touchend',   e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 50) { stopAutoplay(); go(dx < 0 ? 1 : -1); }
+  });
+
+  /* ── URL param: ?autoplay=1 starts automatically after 1.5s ── */
+  if (new URLSearchParams(window.location.search).get('autoplay') === '1') {
+    // hide nav during autoplay recording
+    document.querySelector('.nav').style.opacity = '0';
+    document.querySelector('.key-hint').style.display = 'none';
+    setTimeout(startAutoplay, 1500);
+  }
 </script>
 </body>
 </html>
