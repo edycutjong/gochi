@@ -40,13 +40,73 @@ Welcome! If you are evaluating Gochi for the **HackQuest 0G APAC Hackathon 2026*
   ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white)
   [![CI](https://github.com/edycutjong/gochi/actions/workflows/ci.yml/badge.svg)](https://github.com/edycutjong/gochi/actions/workflows/ci.yml)
 
+  <br/>
+  <img src="https://github.com/user-attachments/assets/4f5de9fe-e1e3-4648-bed8-bee8b733e409" alt="Gochi — On-Chain AI Pet" width="100%">
+
 </div>
 
 ---
 
-<div align="center">
-  <img src="public/og-image.png" alt="Gochi — On-Chain AI Pet" width="100%">
-</div>
+## 📸 Screenshots
+
+### Landing & Birth
+
+<table>
+  <tr>
+    <td width="50%">
+      <img src="https://github.com/user-attachments/assets/4f5de9fe-e1e3-4648-bed8-bee8b733e409" alt="Landing page" width="100%"/>
+      <p align="center"><sub>Landing — glitch hero, 0G stats, sponsor strip</sub></p>
+    </td>
+    <td width="50%">
+      <img src="https://github.com/user-attachments/assets/93e5539e-6b1c-4af8-b957-1f959babf9b8" alt="Born on 0G Chain" width="100%"/>
+      <p align="center"><sub>BORN ON 0G CHAIN — hatching after mint tx confirmed on-chain</sub></p>
+    </td>
+  </tr>
+</table>
+
+### Gameplay — Feed · Play · Sleep
+
+<table>
+  <tr>
+    <td width="33%">
+      <img src="https://github.com/user-attachments/assets/250fbe52-f129-4053-a267-59698e222d7c" alt="Feed" width="100%"/>
+      <p align="center"><sub>Feed — hunger stat written to 0G Storage KV</sub></p>
+    </td>
+    <td width="33%">
+      <img src="https://github.com/user-attachments/assets/04994d87-b541-49b6-beee-da824c64951d" alt="Play" width="100%"/>
+      <p align="center"><sub>Play — mood increases, memory archived to 0G Log</sub></p>
+    </td>
+    <td width="33%">
+      <img src="https://github.com/user-attachments/assets/099aceae-52f7-41b4-a96b-9dec61826bfd" alt="Sleep" width="100%"/>
+      <p align="center"><sub>Sleep — energy restored, Merkle root stored</sub></p>
+    </td>
+  </tr>
+</table>
+
+### AI Chat & Core Memories
+
+<table>
+  <tr>
+    <td width="50%">
+      <img src="https://github.com/user-attachments/assets/a38c044a-1a58-49fd-b6aa-36461abd4d64" alt="Chat 1" width="100%"/>
+      <p align="center"><sub>0G Compute responds in character — stat-aware personality</sub></p>
+    </td>
+    <td width="50%">
+      <img src="https://github.com/user-attachments/assets/148c03a8-18ae-456f-b8e7-567cd785efac" alt="Chat 2" width="100%"/>
+      <p align="center"><sub>Gochi references past interactions from memory context</sub></p>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%">
+      <img src="https://github.com/user-attachments/assets/8613e3cc-83c4-46b4-954e-c941deb60085" alt="Chat 3" width="100%"/>
+      <p align="center"><sub>Personality shifts with stats — grumpy when hungry, playful when happy</sub></p>
+    </td>
+    <td width="50%">
+      <img src="https://github.com/user-attachments/assets/259098f1-d45f-478d-992b-a07fad2e538f" alt="Core Memories" width="100%"/>
+      <p align="center"><sub>Core Memories — Merkle roots + StorageScan links, permanently archived</sub></p>
+    </td>
+  </tr>
+</table>
 
 ---
 
