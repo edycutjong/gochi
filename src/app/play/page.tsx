@@ -45,6 +45,7 @@ export default function PlayPage() {
   const [isMinted, setIsMinted] = useState(false);
   const [tokenId, setTokenId] = useState<number | undefined>();
   const [action, setAction] = useState<'idle' | 'feed' | 'play' | 'sleep'>('idle');
+  const [isDemoMode, setIsDemoMode] = useState(false);
 
   const [stats, setStats] = useState<Stats>(() => ({ hunger: 70, mood: 80, energy: 60, lastUpdate: Date.now() }));
   const [memories, setMemories] = useState<Memory[]>([]);
@@ -57,7 +58,7 @@ export default function PlayPage() {
 
   // Reset state on disconnect to avoid leaking state to a different wallet
   useEffect(() => {
-    if (!isConnected) {
+    if (!isConnected && !isDemoMode) {
       setTimeout(() => {
         setIsMinted(false);
         setTokenId(undefined);
@@ -67,7 +68,7 @@ export default function PlayPage() {
         setAction('idle');
       }, 0);
     }
-  }, [isConnected]);
+  }, [isConnected, isDemoMode]);
 
   // Load state + memories from server after mint
   useEffect(() => {
@@ -161,20 +162,28 @@ export default function PlayPage() {
     setTimeout(() => setAction('idle'), 2000);
   };
 
-  if (!isConnected) {
+  if (!isConnected && !isDemoMode) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-8 text-center font-mono space-y-6 min-h-[50vh]">
         <Plug className="w-14 h-14 animate-pulse text-[var(--gochi-cyan)] opacity-80" />
         <div className="space-y-4 flex flex-col items-center">
           <p className="text-[var(--gochi-text)] text-base">Connect your wallet to hatch your Gochi.</p>
-          <WalletConnect />
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <WalletConnect />
+            <button 
+              onClick={() => setIsDemoMode(true)}
+              className="px-6 py-2.5 rounded-lg font-mono text-sm border border-[var(--gochi-border)] text-[var(--gochi-text)] hover:bg-[var(--gochi-panel)] hover:border-[var(--gochi-cyan)] transition-colors"
+            >
+              Try Demo
+            </button>
+          </div>
         </div>
         <p className="text-[10px] text-[var(--gochi-muted)] opacity-50">Requires 0G Galileo Testnet · Chain ID {REQUIRED_CHAIN_ID}</p>
       </div>
     );
   }
 
-  if (isConnected && chainId !== REQUIRED_CHAIN_ID) {
+  if (isConnected && chainId !== REQUIRED_CHAIN_ID && !isDemoMode) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-8 text-center font-mono space-y-6 min-h-[50vh]">
         <Plug className="w-14 h-14 text-[var(--gochi-amber)] opacity-80" />
@@ -195,6 +204,7 @@ export default function PlayPage() {
   if (!isMinted) {
     return (
       <MintFlow
+        isDemo={isDemoMode}
         onMint={async (id) => {
           setTokenId(id);
           setIsMinted(true);

@@ -25,7 +25,7 @@ const GOCHI_ABI = [
 
 const CHAIN_SCAN = 'https://chainscan-galileo.0g.ai';
 
-export default function MintFlow({ onMint }: { onMint: (tokenId?: number) => Promise<void> }) {
+export default function MintFlow({ onMint, isDemo }: { onMint: (tokenId?: number) => Promise<void>, isDemo?: boolean }) {
   const [stage, setStage] = useState<'idle' | 'minting' | 'hatching'>('idle');
   const [mintTxHash, setMintTxHash] = useState<`0x${string}` | undefined>();
   const [mintedTokenId, setMintedTokenId] = useState<number | undefined>();
@@ -116,9 +116,11 @@ export default function MintFlow({ onMint }: { onMint: (tokenId?: number) => Pro
     setStage('minting');
 
     try {
-      await switchChainAsync({ chainId: 16602 });
+      if (!isDemo) {
+        await switchChainAsync({ chainId: 16602 });
+      }
       const contractAddress = process.env.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}` | undefined;
-      if (contractAddress) {
+      if (contractAddress && !isDemo) {
         const hash = await writeContractAsync({
           address: contractAddress,
           abi: GOCHI_ABI,
