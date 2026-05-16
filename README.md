@@ -7,14 +7,20 @@
 
   [![Live Demo](https://img.shields.io/badge/🚀_Live-Demo-06b6d4?style=for-the-badge)](https://gochi.edycu.dev)
   [![Pitch Video](https://img.shields.io/badge/🎬_Pitch-Video-ef4444?style=for-the-badge)](https://youtu.be/your-video)
-  [![Pitch Deck](https://img.shields.io/badge/📊_Pitch-Deck-f59e0b?style=for-the-badge)](https://your-pitch-deck-url)
-  [![Built for HackQuest](https://img.shields.io/badge/HackQuest-0G_APAC_2026-8b5cf6?style=for-the-badge)](https://hackquest.io)
+  [![Pitch Deck](https://img.shields.io/badge/📊_Pitch-Deck-f59e0b?style=for-the-badge)](https://gochi.edycu.dev/pitch/index.html)
+  [![Built for HackQuest](https://img.shields.io/badge/HackQuest-0G_APAC_2026-8b5cf6?style=for-the-badge)](https://www.hackquest.io/hackathons/0G-APAC-Hackathon)
 
   <br/>
 
   ![Next.js](https://img.shields.io/badge/Next.js_16-black?style=flat&logo=next.js)
   ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=flat&logo=typescript&logoColor=white)
   ![Tailwind](https://img.shields.io/badge/Tailwind_v4-38B2AC?style=flat&logo=tailwindcss&logoColor=white)
+  ![Supabase](https://img.shields.io/badge/Supabase-3ECF8E?style=flat&logo=supabase&logoColor=white)
+  ![Solidity](https://img.shields.io/badge/Solidity-363636?style=flat&logo=solidity&logoColor=white)
+  ![0G Network](https://img.shields.io/badge/0G_Network-8b5cf6?style=flat)
+  ![Hardhat](https://img.shields.io/badge/Hardhat-FFF100?style=flat&logo=hardhat&logoColor=black)
+  ![Wagmi](https://img.shields.io/badge/Wagmi-1E1E2E?style=flat)
+  ![Jest](https://img.shields.io/badge/Jest-C21325?style=flat&logo=jest&logoColor=white)
   [![CI](https://github.com/edycutjong/gochi/actions/workflows/ci.yml/badge.svg)](https://github.com/edycutjong/gochi/actions/workflows/ci.yml)
 
 </div>
