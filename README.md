@@ -6,7 +6,7 @@ Welcome! If you are evaluating Gochi for the **HackQuest 0G APAC Hackathon 2026*
 |---|---|
 | 🚀 **Live App** | [gochi.edycu.dev](https://gochi.edycu.dev) |
 | 📊 **Pitch Deck** | [gochi.edycu.dev/pitch](https://gochi.edycu.dev/pitch/index.html) |
-| 🎬 **Demo Video** | [YouTube](https://youtu.be/your-video) |
+| 🎬 **Demo Video** | [YouTube](https://youtu.be/IEQkZUbJdmo) |
 | 📜 **Contract** | [`0x9BDA4...8cf`](https://chainscan-galileo.0g.ai/address/0x9BDA4cBfda7a7960251A4EE07A7ec0C00239a8cf) on 0G Galileo |
 | 🏗️ **Architecture** | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
 
@@ -41,7 +41,7 @@ Welcome! If you are evaluating Gochi for the **HackQuest 0G APAC Hackathon 2026*
   [![CI](https://github.com/edycutjong/gochi/actions/workflows/ci.yml/badge.svg)](https://github.com/edycutjong/gochi/actions/workflows/ci.yml)
 
   <br/>
-  <img src="https://github.com/user-attachments/assets/4f5de9fe-e1e3-4648-bed8-bee8b733e409" alt="Gochi — On-Chain AI Pet" width="100%">
+  <img src="https://github.com/user-attachments/assets/f11dbf0d-1967-4efa-a86d-75e15c2ac3d7" alt="Gochi — On-Chain AI Pet" width="100%">
 
 </div>
 
