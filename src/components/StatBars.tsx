@@ -100,7 +100,7 @@ export default function StatBars({ stats }: { stats: Stats }) {
 
   const hungerColor = stats.hunger < 30 ? 'bg-[var(--gochi-red)]' : 'bg-[var(--gochi-green)]';
   const moodColor   = 'bg-[var(--gochi-cyan)]';
-  const energyColor = stats.energy < 30 ? 'bg-[var(--gochi-amber)]' : 'bg-[var(--gochi-pixel)]';
+  const energyColor = stats.energy < 30 ? 'bg-[var(--gochi-amber)]' : 'bg-[var(--gochi-purple)]';
 
   return (
     <div

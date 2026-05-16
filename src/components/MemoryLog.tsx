@@ -48,7 +48,7 @@ export default function MemoryLog({ memories }: { memories: Memory[] }) {
           memories.map((mem, i) => (
             <div
               key={mem.id}
-              className={`relative p-3 rounded-lg border bg-[var(--gochi-bg)] transition-all ${
+              className={`relative p-3 rounded-lg border bg-[var(--gochi-bg)] transition-all animate-slide-in-left ${
                 i === 0
                   ? 'border-[var(--gochi-cyan)]/60 shadow-[0_0_10px_rgba(6,182,212,0.15)]'
                   : 'border-[var(--gochi-border)] opacity-75'
