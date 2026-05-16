@@ -69,7 +69,7 @@ export default function PlayPage() {
         }
         if (data.latency) setLatencies((l) => ({ ...l, kvRead: data.latency }));
       })
-      .catch(console.error);
+      .catch(e => console.warn('KV Read Error:', e));
 
     const memoryUrl = tokenId !== undefined ? `/api/log/memories?tokenId=${tokenId}` : '/api/log/memories';
     fetch(memoryUrl)
@@ -77,7 +77,7 @@ export default function PlayPage() {
       .then((data) => {
         if (data.memories) setMemories(data.memories);
       })
-      .catch(console.error);
+      .catch(e => console.warn('Memories Load Error:', e));
   }, [isMinted, isConnected, tokenId]);
 
   // Passive stat decay tick every 60s
@@ -140,7 +140,7 @@ export default function PlayPage() {
         ]);
       }
     } catch (e) {
-      console.error(e);
+      console.warn('Action Error:', e);
     }
 
     setTimeout(() => setAction('idle'), 2000);

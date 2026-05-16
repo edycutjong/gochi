@@ -50,7 +50,11 @@ export default function ChatPanel({
       }
       if (data.latency) onLatency?.(data.latency);
     } catch (error) {
-      console.error(error);
+      console.warn('Chat API error:', error);
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now().toString(), sender: 'gochi', text: '*Network interference detected. Please try again.*' },
+      ]);
     } finally {
       setIsTyping(false);
     }
