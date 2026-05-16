@@ -20,7 +20,7 @@ describe('NotFound Page', () => {
   });
 
   it('renders the return to base link', () => {
-    const { container } = render(<NotFound />);
+    render(<NotFound />);
     
     // Check for the link
     const link = screen.getByRole('link', { name: /RETURN TO BASE/i });
