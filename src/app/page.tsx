@@ -46,7 +46,7 @@ export default function LandingPage() {
             </span>
           </Link>
           <a
-            href="https://chainscan-galileo.0g.ai/address/0x5F9c24C51f1dcd99e1dC3F78c9fb8a5711e426F2"
+            href="https://chainscan-galileo.0g.ai/address/0x9BDA4cBfda7a7960251A4EE07A7ec0C00239a8cf"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 px-6 py-4 font-mono text-sm text-[var(--gochi-muted)] border border-[var(--gochi-border)] rounded hover:border-[var(--gochi-cyan)]/30 hover:text-[var(--gochi-cyan)] transition-colors"
