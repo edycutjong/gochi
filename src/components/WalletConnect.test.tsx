@@ -50,7 +50,7 @@ describe('WalletConnect', () => {
 
     expect(screen.getByText('0x1234…5678')).toBeInTheDocument();
     
-    const disconnectButton = screen.getByText('Disconnect');
+    const disconnectButton = screen.getByRole('button', { name: 'Disconnect' });
     expect(disconnectButton).toBeInTheDocument();
 
     fireEvent.click(disconnectButton);

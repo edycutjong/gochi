@@ -40,9 +40,15 @@ export function WalletConnect() {
         </div>
         <button
           onClick={() => disconnect()}
-          className="bg-[var(--gochi-panel)] hover:bg-red-500/10 text-red-400 border border-[var(--gochi-border)] hover:border-red-500/30 transition-colors px-4 py-2 rounded font-mono text-xs"
+          className="bg-[var(--gochi-panel)] hover:bg-red-500/10 text-red-400 border border-[var(--gochi-border)] hover:border-red-500/30 transition-colors p-2 rounded"
+          aria-label="Disconnect"
+          title="Disconnect"
         >
-          Disconnect
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
         </button>
       </div>
     );
