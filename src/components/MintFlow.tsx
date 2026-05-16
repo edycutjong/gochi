@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Egg, Ghost, Sparkles, ExternalLink, CheckCircle2 } from 'lucide-react';
 import { useWriteContract, useWaitForTransactionReceipt, useSwitchChain } from 'wagmi';
 import { decodeEventLog } from 'viem';
@@ -39,7 +39,7 @@ export default function MintFlow({ onMint }: { onMint: (tokenId?: number) => Pro
         if (saved) return JSON.parse(saved);
         const oldSaved = localStorage.getItem('gochi_last_token_id');
         if (oldSaved) return [Number(oldSaved)];
-      } catch (e) {}
+      } catch {}
     }
     return [];
   });
@@ -47,19 +47,9 @@ export default function MintFlow({ onMint }: { onMint: (tokenId?: number) => Pro
   const options = [{ type: 'new' as const }, ...[...savedTokenIds].reverse().map(id => ({ type: 'resume' as const, id }))];
   const [selectedIndex, setSelectedIndex] = useState(options.length > 1 ? 1 : 0);
 
-  const slideTo = (index: number) => {
+  const slideTo = useCallback((index: number) => {
     setSelectedIndex(Math.max(0, Math.min(options.length - 1, index)));
-  };
-
-  // Touch swipe support
-  const touchStartX = useRef<number | null>(null);
-  const handleTouchStart = (e: React.TouchEvent) => { touchStartX.current = e.touches[0].clientX; };
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null) return;
-    const dx = e.changedTouches[0].clientX - touchStartX.current;
-    if (Math.abs(dx) > 40) slideTo(selectedIndex + (dx < 0 ? 1 : -1));
-    touchStartX.current = null;
-  };
+  }, [options.length]);
 
   useEffect(() => {
     if (stage !== 'idle') return;
@@ -69,7 +59,7 @@ export default function MintFlow({ onMint }: { onMint: (tokenId?: number) => Pro
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [stage, selectedIndex, options.length]);
+  }, [stage, selectedIndex, options.length, slideTo]);
   const [eggColor, setEggColor] = useState('');
   const [eggMotion, setEggMotion] = useState(false);
 
@@ -143,7 +133,8 @@ export default function MintFlow({ onMint }: { onMint: (tokenId?: number) => Pro
         await new Promise((r) => setTimeout(r, 3000));
         await onMint(undefined);
       }
-    } catch (e: any) {
+    } catch (err) {
+      const e = err as { shortMessage?: string; message?: string };
       console.error(e);
       let errMsg = 'Transaction failed';
       let docsUrl: string | undefined;

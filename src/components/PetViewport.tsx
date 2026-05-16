@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Ghost, Moon, Drumstick, Star } from 'lucide-react';
 
 type Stats = { hunger: number; mood: number; energy: number };

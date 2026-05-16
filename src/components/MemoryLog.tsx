@@ -1,5 +1,5 @@
 'use client';
-import { useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { Brain, Database } from 'lucide-react';
 
 type Memory = {
@@ -12,17 +12,19 @@ type Memory = {
 };
 
 export default function MemoryLog({ memories }: { memories: Memory[] }) {
-  const initialMemoriesRef = useRef<Set<string> | null>(null);
+  const [initialMemories, setInitialMemories] = useState<Set<string> | null>(null);
 
-  // Capture the first non-empty batch of memories as the 'initial' load
-  if (initialMemoriesRef.current === null && memories.length > 0) {
-    initialMemoriesRef.current = new Set(memories.map(m => m.id));
-  }
+  useEffect(() => {
+    // Capture the first non-empty batch of memories as the 'initial' load
+    if (initialMemories === null && memories.length > 0) {
+      setTimeout(() => setInitialMemories(new Set(memories.map(m => m.id))), 0);
+    }
+  }, [memories, initialMemories]);
 
   const isNew = (id: string) => {
     // If we haven't locked in an initial load yet, don't animate anything
-    if (!initialMemoriesRef.current) return false;
-    return !initialMemoriesRef.current.has(id);
+    if (!initialMemories) return false;
+    return !initialMemories.has(id);
   };
 
   const getTypeStyle = (type: string) => {

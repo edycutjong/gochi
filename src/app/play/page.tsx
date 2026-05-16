@@ -57,12 +57,14 @@ export default function PlayPage() {
   // Reset state on disconnect to avoid leaking state to a different wallet
   useEffect(() => {
     if (!isConnected) {
-      setIsMinted(false);
-      setTokenId(undefined);
-      setStats({ hunger: 70, mood: 80, energy: 60, lastUpdate: Date.now() });
-      setMemories([]);
-      setLatencies({ kvRead: null, kvWrite: null, log: null, ai: null });
-      setAction('idle');
+      setTimeout(() => {
+        setIsMinted(false);
+        setTokenId(undefined);
+        setStats({ hunger: 70, mood: 80, energy: 60, lastUpdate: Date.now() });
+        setMemories([]);
+        setLatencies({ kvRead: null, kvWrite: null, log: null, ai: null });
+        setAction('idle');
+      }, 0);
     }
   }, [isConnected]);
 
