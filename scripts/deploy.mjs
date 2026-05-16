@@ -48,7 +48,7 @@ if (!fs.existsSync(artifactPath)) {
 }
 const { abi, bytecode } = JSON.parse(fs.readFileSync(artifactPath, 'utf-8'));
 
-const baseURI = process.env.BASE_URI || 'https://gochi.vercel.app/api/metadata/';
+const baseURI = process.env.BASE_URI || 'https://gochi.edycu.dev/api/metadata/';
 const factory = new ethers.ContractFactory(abi, bytecode, wallet);
 
 console.log('\nDeploying...');
